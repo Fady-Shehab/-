@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>صنع في الجنة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Markazi+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #ece1c8;
+    --paper-light: #f7f1e1;
+    --paper-dark: #ddccA3;
+    --ink: #362a1e;
+    --ink-soft: #5c4a37;
+    --red: #8a2020;
+    --red-dark: #641414;
+    --gold: #a3854f;
+    --shadow: rgba(54, 42, 30, 0.28);
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    min-height:100vh;
+    background: var(--ink);
+    font-family:'Markazi Text', serif;
+    color: var(--ink);
+  }
+
+  body{
+    background:
+      radial-gradient(circle at 20% 10%, rgba(0,0,0,0.15), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(0,0,0,0.2), transparent 45%),
+      #2a2018;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding: 24px 12px 60px;
+  }
+
+  .stage{
+    width:100%;
+    max-width:640px;
+    position:relative;
+  }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; animation: rise .6s ease both; }
+
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(18px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  .card{
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255,255,255,0.5), transparent 25%),
+      radial-gradient(circle at 85% 90%, rgba(0,0,0,0.06), transparent 35%),
+      var(--paper);
+    border:1px solid var(--paper-dark);
+    box-shadow: 0 18px 40px var(--shadow), inset 0 0 60px rgba(163,133,79,0.12);
+    border-radius: 4px;
+    padding: 34px 28px 28px;
+    position:relative;
+  }
+
+  .card::before{
+    content:"";
+    position:absolute; inset:10px;
+    border:1px solid rgba(163,133,79,0.45);
+    pointer-events:none;
+  }
+
+  h1,h2,h3{
+    font-family:'Aref Ruqaa', serif;
+    margin:0 0 10px;
+    color: var(--ink);
+    letter-spacing: .5px;
+  }
+
+  .eyebrow{
+    font-family:'Aref Ruqaa', serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--red);
+    border-bottom: 1px solid rgba(138,32,32,0.35);
+    display:inline-block;
+    padding-bottom: 4px;
+    margin-bottom: 16px;
+  }
+
+  p{ line-height: 2; font-size: 21px; color: var(--ink-soft); margin: 0 0 16px; }
+
+  .hl{
+    color: var(--red);
+    font-weight: 700;
+    position: relative;
+    background: linear-gradient(transparent 62%, rgba(163,133,79,0.35) 62%);
+    padding: 0 1px;
+  }
+  .hl sup{
+    font-family:'Markazi Text', serif;
+    font-size: 12px;
+    color: var(--gold);
+    margin-inline-start: 1px;
+  }
+
+  .btnrow{ display:flex; gap:10px; justify-content:flex-end; margin-top: 22px; flex-wrap:wrap; }
+
+  button.action{
+    font-family:'Aref Ruqaa', serif;
+    font-size: 19px;
+    background: var(--red);
+    color: var(--paper-light);
+    border: none;
+    padding: 11px 26px;
+    border-radius: 2px;
+    cursor:pointer;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  button.action:hover{ transform: translateY(-2px); box-shadow: 0 9px 18px rgba(0,0,0,0.3); }
+  button.action:active{ transform: translateY(0); }
+  button.action:focus-visible{ outline: 3px solid var(--gold); outline-offset:2px; }
+  button.action.ghost{
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--paper-dark);
+    box-shadow:none;
+  }
+
+  .stampline{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top: 26px; padding-top: 14px; border-top: 1px dashed rgba(163,133,79,0.5);
+  }
+  .chapter-tag{ font-family:'Aref Ruqaa', serif; font-size: 13px; color: var(--ink-soft); letter-spacing: 2px; }
+
+  .stamp{
+    width: 88px; height: 88px;
+    border: 3px solid var(--red);
+    border-radius: 50%;
+    color: var(--red);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    font-family:'Aref Ruqaa', serif;
+    font-size: 14px;
+    line-height: 1.25;
+    transform: rotate(-9deg);
+    opacity: .85;
+    padding: 6px;
+  }
+
+  /* ---------- Welcome ---------- */
+  #screen-welcome .card{ text-align:center; padding: 50px 26px 40px; }
+  .welcome-title{ font-size: 42px; margin-bottom: 6px; }
+  .welcome-sub{ font-family:'Markazi Text',serif; color: var(--ink-soft); font-size: 20px; margin-bottom: 28px; }
+  .seal{
+    width: 120px; height:120px; margin: 0 auto 26px;
+    border: 3px double var(--red);
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Aref Ruqaa', serif;
+    font-size: 22px;
+    color: var(--red);
+  }
+
+  /* ---------- Progress dots ---------- */
+  .progress{ display:flex; gap:8px; justify-content:center; margin-bottom: 18px; }
+  .progress span{
+    width:9px; height:9px; border-radius:50%;
+    background: rgba(163,133,79,0.35);
+  }
+  .progress span.done{ background: var(--red); }
+
+  /* ---------- Password screen ---------- */
+  .pwd-input, .q-input{
+    width:100%;
+    font-family:'Markazi Text', serif;
+    font-size: 22px;
+    padding: 12px 14px;
+    border: 1px solid var(--paper-dark);
+    background: var(--paper-light);
+    color: var(--ink);
+    border-radius: 2px;
+    direction: rtl;
+  }
+  .pwd-input:focus, .q-input:focus{ outline: 2px solid var(--gold); }
+  .error-msg{ color: var(--red); font-size:17px; margin-top:8px; display:none; }
+  .error-msg.show{ display:block; }
+
+  /* ---------- Questions ---------- */
+  .qitem{ margin-bottom: 20px; }
+  .qnum{ font-family:'Aref Ruqaa', serif; color: var(--red); font-size:18px; }
+  .qtext{ margin: 4px 0 8px; font-size: 20px; color: var(--ink); line-height:1.7; }
+
+  /* ---------- Result ---------- */
+  .code-box{
+    background: var(--paper-light);
+    border: 1px dashed var(--gold);
+    padding: 18px 16px;
+    font-family:'Aref Ruqaa', serif;
+    font-size: 22px;
+    text-align:center;
+    color: var(--red-dark);
+    margin: 18px 0;
+    line-height: 1.8;
+  }
+  .drive-link{
+    display:inline-block;
+    margin-top: 6px;
+    color: var(--red);
+    text-decoration: underline;
+    font-family:'Aref Ruqaa', serif;
+    font-size: 19px;
+  }
+  .whatsapp-btn{
+    background: var(--ink);
+  }
+  .score-note{ color: var(--ink-soft); font-size: 18px; text-align:center; margin-top: 14px; }
+
+  @media (max-width: 480px){
+    p{ font-size: 19px; }
+    .welcome-title{ font-size: 34px; }
+    .card{ padding: 26px 18px 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- ============ WELCOME ============ -->
+  <section class="screen active" id="screen-welcome">
+    <div class="card">
+      <div class="seal">سالستيا</div>
+      <div class="eyebrow">من أوراق لا يعرفها أحد</div>
+      <h1 class="welcome-title">صنع في الجنة</h1>
+      <p class="welcome-sub">قصة لم تُروَ من قبل... اقرئيها بعناية، فبعض الحروف هنا لا تُكتب عبثًا.</p>
+      <button class="action" onclick="goTo('screen-ch1')">ابدئي القراءة</button>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 1 ============ -->
+  <section class="screen" id="screen-ch1">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span></span><span></span><span></span></div>
+      <div class="eyebrow">الفصل الأول</div>
+      <h2>صنع في الجنة</h2>
+      <p>
+        <span class="hl">م<sup>1</sup></span>نذ زمنٍ بعيد، في أرضٍ لا تشبه أرضنا، <span class="hl">ا<sup>2</sup></span>ستقرت حضارةٌ عجيبة اسمها سالستيا. كانت السماء هناك أصفى مما تتخيل، والجبال تحتضن الوديان الخضراء، والأنهار
+        <span class="hl">ص<sup>3</sup></span>افية لا تعرف التلوث ولا الجفاف. مدنها <span class="hl">ن<sup>4</sup></span>ظيفة متطورة، تُضيئها أنوارٌ هادئة في الليل، ولا يوجد بها مرضٌ ولا فقرٌ ولا معاناة. أهل سالستيا
+        <span class="hl">ع<sup>5</sup></span>اشوا في سلامٍ دام قرونًا طويلة، بلا حربٍ واحدة تُذكر في كتبهم.
+      </p>
+      <p>
+        وفي ليلةٍ هادئة كهذه الليالي، وُلد طفلٌ صغير في بيتٍ بسيط على أطراف المدينة. شعره أسود قاتم كقلب الليل، وعيناه حمراوان قرمزيتان تحملان نارًا هادئة لا يفهمها أحد. سمّته أمه فريدريك.
+      </p>
+      <p>
+        لم يكن أحدٌ يعلم، في تلك الليلة الهادئة، أن هذا الطفل الصغير سيحمل بداخله شيئًا لم تعرفه سالستيا من قبل.
+      </p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-welcome')">السابق</button>
+        <span class="chapter-tag">١ / ٤</span>
+        <button class="action" onclick="goTo('screen-ch2')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 2 ============ -->
+  <section class="screen" id="screen-ch2">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span></span><span></span></div>
+      <div class="eyebrow">الفصل الثاني</div>
+      <h2>ولدٌ من ورق وألوان</h2>
+      <p>
+        نشأ <span class="hl">ف<sup>6</sup></span>ريدريك طفلاً هادئًا، يقضي أيامه بين أوراق الرسم وأحلامٍ لا تنتهي. كان
+        <span class="hl">ي<sup>7</sup></span>قضي ساعاتٍ طويلة يرسم عوالمَ لم يرها أحد غيره: قلاعًا معلّقة في السماء، وبحارًا من الضوء، ووجوهًا لأناسٍ لم يقابلهم قط.
+        كان خياله واسعًا لدرجة أن <span class="hl">أ<sup>8</sup></span>حيانًا كان يفضّل صمته على كل أحاديث سالستيا الهادئة.
+      </p>
+      <p>
+        <span class="hl">ل<sup>9</sup></span>كنه لم يكن يشعر بالوحدة أبدًا، فقد كان له <span class="hl">ج<sup>10</sup></span>اره نيث، الطفل المشاغب الذي يسكن البيت المجاور، وصديقه الوحيد الذي يعرف كيف يجذبه من عالمه الهادئ إلى الضوء.
+      </p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch1')">السابق</button>
+        <span class="chapter-tag">٢ / ٤</span>
+        <button class="action" onclick="goTo('screen-ch3')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 3 ============ -->
+  <section class="screen" id="screen-ch3">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span></span></div>
+      <div class="eyebrow">الفصل الثالث</div>
+      <h2>الطفل الذي وقف على الحافة</h2>
+      <p>
+        كان <span class="hl">ن<sup>11</sup></span>يث نقيض فريدريك تمامًا: صاخبًا، مرحًا، يعرفه كل أهل الحي. تحيط به دائمًا حشودٌ من الأصدقاء، وضحكاتٌ اجتماعي<span class="hl">ة<sup>12</sup></span> لا تهدأ، بينما يقف فريدريك على مسافةٍ صامتة يراقب من بعيد.
+      </p>
+      <p>
+        <span class="hl">ل<sup>13</sup></span>طالما شعر فريدريك بشيءٍ غريب كلما رأى نيث محاطًا بالناس... شيءٌ لم يكن
+        <span class="hl">ي<sup>14</sup></span>عرف اسمه، يشبه الغيرة قليلًا، وإن كان يرفض أن يسمّيه كذلك. كيف لأرضٍ بلا حسد أن تحمل بين سكانها من يشعر بهذا الشعور؟
+      </p>
+      <p>
+        مرت السنوات، وبلغ فريدريك الحادية عشرة من عمره، و<span class="hl">س<sup>15</sup></span>الستيا لا تزال كما هي: هادئة، كاملة، لا تعرف نقصًا... في الظاهر على الأقل.
+      </p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch2')">السابق</button>
+        <span class="chapter-tag">٣ / ٤</span>
+        <button class="action" onclick="goTo('screen-ch4')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 4 ============ -->
+  <section class="screen" id="screen-ch4">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span></div>
+      <div class="eyebrow">الفصل الرابع</div>
+      <h2>الباب الذي رآه في الظلام</h2>
+      <p>
+        في تلك الليلة، و<span class="hl">ب<sup>16</sup></span>ينما كانت سالستيا نائمة تحت سماءٍ صافية، جلس فريدريك عند نافذته يرسم كما يفعل كل ليلة. لكن هذه المرة، رسم شيئًا مختلفًا: بابًا صغيرًا لا يشبه أي شيءٍ رآه من قبل، محاطًا بضوءٍ خافت.
+      </p>
+      <p>
+        نظر إليه طويلًا، وهمس لنفسه بصوتٍ لا يكاد يُسمع: "ربما... ما هو <span class="hl">د<sup>17</sup></span><span class="hl">ا<sup>18</sup></span><span class="hl">ئ<sup>19</sup></span><span class="hl">م<sup>20</sup></span>ٌ ليس هو كل شيء."
+      </p>
+      <p>
+        لم يكن يعرف حينها أن هذه الكلمات الهامسة ستكون أول خيطٍ في حكايةٍ أكبر بكثير مما تخيّل طفلٌ في الحادية عشرة من عمره.
+      </p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch3')">السابق</button>
+        <span class="chapter-tag">٤ / ٤</span>
+        <button class="action" onclick="goTo('screen-password')">إلى الملف التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PASSWORD ============ -->
+  <section class="screen" id="screen-password">
+    <div class="card" style="text-align:center;">
+      <div class="stamp" style="margin: 0 auto 18px;">مقيّد<br>الدخول</div>
+      <div class="eyebrow">قبل المتابعة</div>
+      <h2>اكتبي كلمة السر</h2>
+      <p style="font-size:19px;">اجمعي الحروف التي ظهرت مميزة داخل الفصول الأربعة بترتيبها، واكتبيها هنا كجملة كاملة.</p>
+      <input type="text" id="pwd-input" class="pwd-input" placeholder="اكتبي الجملة هنا..." dir="rtl">
+      <div class="error-msg" id="pwd-error">مش الجملة الصح... راجعي الحروف المميزة تاني.</div>
+      <div class="btnrow" style="justify-content:center;">
+        <button class="action ghost" onclick="goTo('screen-ch4')">السابق</button>
+        <button class="action" onclick="checkPassword()">تأكيد</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUESTIONS ============ -->
+  <section class="screen" id="screen-questions">
+    <div class="card">
+      <div class="eyebrow">أسئلة التحقيق</div>
+      <h2>عشرة أسئلة</h2>
+      <p style="font-size:18px;">جاوبي على كل الأسئلة. مفيش داعي للدقة الكاملة في الكتابة، بس حاولي تجاوبي بصراحة.</p>
+      <div id="questions-holder"></div>
+      <div class="btnrow">
+        <button class="action" onclick="submitQuestions()">تسليم الإجابات</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section class="screen" id="screen-result">
+    <div class="card" style="text-align:center;">
+      <div class="eyebrow">نتيجة التحقيق</div>
+      <h2 id="result-title">تم فتح الملف</h2>
+      <p class="score-note" id="score-note"></p>
+      <div id="result-success" style="display:none;">
+        <div class="code-box" id="secret-code"></div>
+        <p style="font-size:18px;">الجزء التالي من الملف هنا:</p>
+        <a id="drive-link" class="drive-link" href="#" target="_blank" rel="noopener">فتح الرابط</a>
+        <div class="btnrow" style="justify-content:center; margin-top:24px;">
+          <button class="action whatsapp-btn" onclick="sendWhatsapp()">إرسال إجاباتي على واتساب</button>
+        </div>
+      </div>
+      <div id="result-retry" style="display:none;">
+        <p style="font-size:19px;">في إجابات محتاجة مراجعة. جربي تاني.</p>
+        <div class="btnrow" style="justify-content:center;">
+          <button class="action ghost" onclick="goTo('screen-questions')">إعادة المحاولة</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   قابل للتعديل لاحقًا:
+   ============================================================ */
+const DRIVE_LINK = "PUT_DRIVE_LINK_HERE"; // <-- استبدل ده بلينك الجزء التاني لما يجهز
+const SECRET_CODE = "الوقت هو مجرد مفهوم منعدم بنعرف انه موجود من مجرد التأثيرات اللي حوالينا";
+const WHATSAPP_NUMBER = "201033707583"; // بصيغة دولية بدون + أو أصفار زيادة
+
+/* ============================================================
+   أدوات مطابقة نصية (تتسامح مع فروقات الكتابة البسيطة)
+   ============================================================ */
+function normalizeAr(str){
+  return (str || "")
+    .replace(/[\u064B-\u0652\u0670\u0640]/g, "")
+    .replace(/[إأآا]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ئ/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ة/g, "ه")
+    .replace(/[^؀-ۿ0-9a-zA-Z]/g, "")
+    .toLowerCase();
+}
+
+function levenshtein(a, b){
+  const m = a.length, n = b.length;
+  if(m === 0) return n;
+  if(n === 0) return m;
+  const dp = Array.from({length: m+1}, () => new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0] = i;
+  for(let j=0;j<=n;j++) dp[0][j] = j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      const cost = a[i-1] === b[j-1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i-1][j] + 1,
+        dp[i][j-1] + 1,
+        dp[i-1][j-1] + cost
+      );
+    }
+  }
+  return dp[m][n];
+}
+
+function fuzzyMatch(input, accepted, toleranceRatio = 0.3){
+  const normInput = normalizeAr(input);
+  if(!normInput) return false;
+  return accepted.some(acc => {
+    const normAcc = normalizeAr(acc);
+    const dist = levenshtein(normInput, normAcc);
+    const tolerance = Math.max(1, Math.floor(normAcc.length * toleranceRatio));
+    return dist <= tolerance || normInput.includes(normAcc) || normAcc.includes(normInput);
+  });
+}
+
+/* ============================================================
+   التنقل بين الشاشات
+   ============================================================ */
+function goTo(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+/* ============================================================
+   كلمة السر
+   ============================================================ */
+const PASSWORD_PHRASE = "ما صنع في الجنة ليس بدائم";
+
+function checkPassword(){
+  const val = document.getElementById("pwd-input").value;
+  const target = normalizeAr(PASSWORD_PHRASE);
+  const given = normalizeAr(val);
+  const dist = levenshtein(given, target);
+  const tolerance = 2;
+  const errorEl = document.getElementById("pwd-error");
+  if(given.length > 0 && dist <= tolerance){
+    errorEl.classList.remove("show");
+    buildQuestions();
+    goTo("screen-questions");
+  } else {
+    errorEl.classList.add("show");
+  }
+}
+
+/* ============================================================
+   الأسئلة
+   ============================================================ */
+const QUESTIONS = [
+  { text: "ايه اسم الأرض اللي حصلت فيها أحداث القصة؟", accepted: ["سالستيا", "سيلستيا"], open:false },
+  { text: "فريدريك كان بيحب يعمل ايه في وقته؟", accepted: ["الرسم", "رسم"], open:false },
+  { text: "مين صديق فريدريك المقرب اللي ساكن جنبه؟", accepted: ["نيث"], open:false },
+  { text: "فريدريك كان عنده كام سنة لما خلص الفصل الرابع؟", accepted: ["11", "احدعشر", "إحدى عشرة", "احدى عشر"], open:false },
+  { text: "ايه لون عيون فريدريك؟", accepted: ["احمر", "قرمزي", "أحمر"], open:false },
+
+  { text: "ايه هدفك؟", accepted: ["هندسة", "كلية هندسة"], open:false },
+  { text: "ايه اسم النجم الثالث في الشمال القطبي في الأسد الأكبر؟", accepted: [], open:true },
+  { text: "ايه الهدف من حياة الشخص في رأيك؟", accepted: [], open:true },
+  { text: "لو اسم يارا اتشال ووشك اتغير، هتبقي مين انتِ فعلاً؟ هل هتفضلي يارا ولا هتبقي شخص تاني؟", accepted: [], open:true },
+  { text: "ايه الهدف من إن الشخص يحسب عمره وكأنه عارف إنه هيموت؟", accepted: [], open:true }
+];
+
+function buildQuestions(){
+  const holder = document.getElementById("questions-holder");
+  holder.innerHTML = "";
+  QUESTIONS.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "qitem";
+    div.innerHTML = `
+      <div class="qnum">سؤال ${i+1}</div>
+      <div class="qtext">${q.text}</div>
+      <input type="text" class="q-input" id="q-${i}" dir="rtl" placeholder="اكتبي إجابتك هنا...">
+    `;
+    holder.appendChild(div);
+  });
+}
+
+function submitQuestions(){
+  let correct = 0;
+  const answersForWhatsapp = [];
+  QUESTIONS.forEach((q, i) => {
+    const val = document.getElementById(`q-${i}`).value.trim();
+    answersForWhatsapp.push(`${i+1}) ${q.text}\n${val || "(بدون إجابة)"}`);
+    if(q.open){
+      if(val.length > 0) correct++;
+    } else {
+      if(fuzzyMatch(val, q.accepted)) correct++;
+    }
+  });
+
+  document.getElementById("score-note").textContent = `إجاباتك الصحيحة: ${correct} من 10`;
+  window.__yara_answers_text = answersForWhatsapp.join("\n\n");
+
+  if(correct >= 8){
+    document.getElementById("result-success").style.display = "block";
+    document.getElementById("result-retry").style.display = "none";
+    document.getElementById("result-title").textContent = "الملف اتفتح";
+    document.getElementById("secret-code").textContent = SECRET_CODE;
+    const driveEl = document.getElementById("drive-link");
+    driveEl.href = DRIVE_LINK;
+  } else {
+    document.getElementById("result-success").style.display = "none";
+    document.getElementById("result-retry").style.display = "block";
+    document.getElementById("result-title").textContent = "لسه فيه حاجة ناقصة";
+  }
+  goTo("screen-result");
+}
+
+function sendWhatsapp(){
+  const text = encodeURIComponent(
+    "إجابات يارا - صنع في الجنة\n\n" + (window.__yara_answers_text || "")
+  );
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, "_blank");
+}
+</script>
+</body>
+</html>
