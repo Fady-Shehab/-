@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0;
+    font-family: 'Noto Naskh Arabic', serif;
+    color: #362a1e;
+  }
+
+  .page{
+    width: 100%;
+    min-height: 297mm;
+    padding: 26mm 20mm 22mm;
+    background: #ece1c8;
+    position: relative;
+    page-break-after: always;
+  }
+  .page:last-child{ page-break-after: avoid; }
+
+  .page::before{
+    content: "";
+    position: absolute;
+    top: 10mm; left: 10mm; right: 10mm; bottom: 10mm;
+    border: 1px solid rgba(163,133,79,0.55);
+  }
+
+  h1, h2, h3{
+    font-family: 'Amiri', serif;
+    margin: 0 0 8mm;
+    color: #362a1e;
+  }
+
+  .eyebrow{
+    font-family: 'Amiri', serif;
+    font-size: 12pt;
+    letter-spacing: 3px;
+    color: #8a2020;
+    border-bottom: 1px solid rgba(138,32,32,0.35);
+    display: inline-block;
+    padding-bottom: 2mm;
+    margin-bottom: 8mm;
+  }
+
+  p{
+    font-size: 13.5pt;
+    line-height: 2;
+    color: #4a3c2c;
+    margin: 0 0 5mm;
+    text-align: justify;
+  }
+
+  .dialogue{
+    margin: 0 0 3mm;
+    font-size: 13pt;
+    color: #362a1e;
+    padding-right: 6mm;
+    border-right: 2px solid rgba(138,32,32,0.35);
+  }
+
+  .hl{
+    color: #8a2020;
+    font-weight: 700;
+    background: linear-gradient(transparent 60%, rgba(163,133,79,0.4) 60%);
+  }
+
+  .chapter-num{
+    font-family: 'Amiri', serif;
+    font-size: 11pt;
+    color: #8a856b;
+    letter-spacing: 2px;
+    position: absolute;
+    bottom: 14mm; left: 20mm;
+  }
+
+  /* -------- Cover -------- */
+  .cover{
+    text-align: center;
+    padding-top: 90mm;
+  }
+  .seal{
+    width: 42mm; height: 42mm;
+    border: 2.5pt double #8a2020;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 42mm;
+    font-family: 'Amiri', serif;
+    font-size: 13pt;
+    color: #8a2020;
+    margin: 0 auto 12mm;
+  }
+  .cover .eyebrow{ display:block; margin-left:auto; margin-right:auto; width: fit-content; }
+  .cover h1{ font-size: 34pt; margin-bottom: 4mm; }
+  .cover .sub{ font-family: 'Amiri', serif; font-size: 13pt; color: #6b5a44; }
+  .cover .filenum{
+    margin-top: 20mm;
+    font-family: 'Amiri', serif;
+    font-size: 11pt;
+    color: #8a856b;
+    letter-spacing: 2px;
+  }
+
+  /* -------- Cipher page -------- */
+  .cipher-box{
+    background: #f7f1e1;
+    border: 1px dashed #a3854f;
+    padding: 10mm 8mm;
+    text-align: center;
+    font-family: 'Amiri', serif;
+    font-size: 20pt;
+    letter-spacing: 4px;
+    color: #641414;
+    margin: 10mm 0;
+  }
+  .alphabet-strip{
+    text-align: center;
+    margin: 8mm 0 4mm;
+    font-family: 'Amiri', serif;
+    font-size: 15pt;
+    letter-spacing: 6mm;
+    color: #5c4a37;
+    line-height: 2.4;
+  }
+  .stamp-corner{
+    width: 26mm; height: 26mm;
+    border: 2pt solid #8a2020;
+    border-radius: 50%;
+    color: #8a2020;
+    text-align:center;
+    line-height: 1.3;
+    padding-top: 7mm;
+    font-family: 'Amiri', serif;
+    font-size: 9pt;
+    margin: 0 0 8mm auto;
+  }
+
+  .instructions{
+    font-size: 13pt;
+    line-height: 1.9;
+    color: #4a3c2c;
+    text-align: center;
+    margin: 6mm 0;
+  }
+
+  .whatsapp-note{
+    text-align: center;
+    font-family: 'Amiri', serif;
+    font-size: 12.5pt;
+    color: #362a1e;
+    margin-top: 10mm;
+    border-top: 1px dashed rgba(163,133,79,0.6);
+    padding-top: 6mm;
+  }
+
+  /* -------- Final letters page -------- */
+  .final-note{
+    background: #f7f1e1;
+    border: 1px dashed #a3854f;
+    padding: 10mm 8mm;
+    text-align: center;
+    font-size: 13pt;
+    color: #4a3c2c;
+    line-height: 1.9;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ COVER ============ -->
+  <div class="page cover">
+    <div class="eyebrow">الملف الثاني</div>
+    <h1>ما وراء الباب</h1>
+    <div class="sub">تكملة حكاية فريدريك... من حيث توقفنا</div>
+    <div class="filenum">تحذير: يُقرأ بعد فتح الملف الأول فقط</div>
+  </div>
+
+  <!-- ============ CHAPTER 5 ============ -->
+  <div class="page">
+    <div class="eyebrow">الفصل الخامس</div>
+    <h2>الحلم الأول</h2>
+    <p>
+      في <span class="hl">م</span>نتصف الليل، بينما كانت سالستيا نائمة كعادتها، رأى فريدريك حلمًا لم يشبه أي حلمٍ سبق. رجلٌ <span class="hl">ا</span>قترب منه بخطواتٍ هادئة، يرتدي بدلةً أنيقة لا تشبه ملابس أهل سالستيا على الإطلاق، ووجهه <span class="hl">ل</span>طيف يحمل ابتسامةً غريبة الهدوء، وعيناه تلمعان بشيءٍ لا يعرف فريدريك اسمه.
+    </p>
+    <p>"أهلًا بيك يا طفل" قال الرجل بصوتٍ ناعم. <span class="hl">س</span>كت فريدريك للحظة، لا يعرف إن كان يجب أن يخاف أم يبتسم.</p>
+    <p class="dialogue">- من حضرتك؟ سأله فريدريك أخيرًا.</p>
+    <p class="dialogue">- صديق قديم... وإن كنت لسه ما اتعرفناش، رد الرجل وهو يبتسم.</p>
+    <p class="dialogue">- أنا مش بحلم بيك قبل كده.</p>
+    <p class="dialogue">- هتحلم بيا كتير من دلوقتي، يا فريدريك.</p>
+    <p>
+      قال الرجل جملةً أخرى، لكن صوته صار غريبًا فجأة، وكأن كل كلمة منها تُقال بلغةٍ لا يعرفها فريدريك، فاستيقظ فجأة، قلبه يخفق بقوة، والغرفة من حوله هادئة كأن شيئًا لم يحدث.
+    </p>
+    <div class="chapter-num">الفصل ٥ من ٩</div>
+  </div>
+
+  <!-- ============ CHAPTER 6 ============ -->
+  <div class="page">
+    <div class="eyebrow">الفصل السادس</div>
+    <h2>ملل لا يشبه سالستيا</h2>
+    <p>
+      بعد الحلم الغريب، بدأ شيء ما يتغير بداخل فريدريك. الأيام في سالستيا استمرت كما هي: هادئة، متكررة، بلا مفاجآت. لكن فريدريك، للمرة الأولى في حياته، بدأ يشعر بالملل من السلام ال<span class="hl">د</span>ائم، وصار يهرب من هذا اله<span class="hl">د</span>وء الثقيل — لا، بل من <span class="hl">ه</span>ذا الهدوء الثقيل — نحو صخبٍ لا يعرف شكله بعد.
+    </p>
+    <p class="dialogue">- ماما، ليه محدش هنا بيتخانق؟ ليه محدش بيتغير؟ سألها فجأة.</p>
+    <p class="dialogue">- لأننا بنعرف السلام هو إحنا، يا حبيبي. ده أحسن حاجة ممكن نملكها.</p>
+    <p class="dialogue">- بس أنا... أحي<span class="hl">ا</span>نًا كان يتمنى لو تحدث فوضى، ولو مرة واحدة. حتى لو صغيرة.</p>
+    <p>
+      نظرت إليه أمه بقلقٍ لم تُظهره، وابتسمت ابتسامةً باهتة، وغيّرت الموضوع.
+    </p>
+    <p>
+      في تلك الليلة، بدأ فريدريك يفكر لأول مرة في سؤالٍ لم يفكر فيه أحد من قبل في سالستيا: ما معنى أن يعيش شيء؟ وما معنى أن يتوقف عن العيش؟
+    </p>
+    <div class="chapter-num">الفصل ٦ من ٩</div>
+  </div>
+
+  <!-- ============ CHAPTER 7 ============ -->
+  <div class="page">
+    <div class="eyebrow">الفصل السابع</div>
+    <h2>العصفور الصغير</h2>
+    <p>
+      في اليوم التالي، خرج فريدريك للحديقة <span class="hl">ك</span>ثيرًا كما اعتاد، يحمل معه دفتر رسمه وأفكاره الغريبة. <span class="hl">ل</span>احظ عصفورًا صغيرًا يقفز بين الأزهار، يلعب وحده بفرحٍ لا يفهمه أحد غيره. <span class="hl">ن</span>ظر إليه فريدريك طويلًا، وسأل نفسه سؤالًا غريبًا.
+    </p>
+    <p class="dialogue">- لو توقف عن الحركة... هل هيفضل موجود؟ ولا هيختفي خالص؟ همس لنفسه.</p>
+    <p>
+      اقترب منه ببطء، ومد يده، وأمسك بالعصفور الصغير.
+    </p>
+    <p class="dialogue">- بس عايز أفهم، همس مرة أخرى.</p>
+    <p>
+      وفي لحظةٍ واحدة، توقف العصفور عن الحركة تمامًا.
+    </p>
+    <p>
+      وقف فريدريك مكانه طويلًا، ينظر إلى يديه، لا يشعر بالخوف الذي توقعه، ولا بالحزن الذي كان يجب أن يشعر به. شعر فقط... بفراغ. فراغ لم يعرف اسمه من قبل.
+    </p>
+    <div class="chapter-num">الفصل ٧ من ٩</div>
+  </div>
+
+  <!-- ============ CHAPTER 8 ============ -->
+  <div class="page">
+    <div class="eyebrow">الفصل الثامن</div>
+    <h2>عيون تشبه القصص القديمة</h2>
+    <p>
+      من ذلك اليوم، بدأ كل شيء <span class="hl">ي</span>تغير حول فريدريك. الأطفال الذين كانوا يلعبون معه <span class="hl">ص</span>اروا يبتعدون عنه بهدوء، وكأن جسده صار يحمل شيئًا لا يستطيعون تسميته. حتى العصافير، بعد تلك اللحظة، لم تعد تقترب من حديقته كما كانت.
+    </p>
+    <p class="dialogue">- عنيه بقت غريبة، قالت إحدى الجارات لجارتها بصوتٍ خافت.</p>
+    <p class="dialogue">- شفت زيها قبل كده... في كتب قديمة، من أيام الحروب والأوبئة، همس رجل عجوز لصديقه.</p>
+    <p>
+      <span class="hl">ل</span>احظ الكبار في القرية أن لون عيني فريدريك القرمزي صار أشد حدة، يشبه الوصف الذي تركه أجدادهم عن "أعين الظلام" في الأزمنة الصعبة القديمة، أزمنة لم يعشها أحد في سالستيا ال<span class="hl">ح</span>ديثة، لكن الكل يحفظ قصصها في كتبهم.
+    </p>
+    <p>
+      حتى رسومات فريدريك تغيّرت. لم تعد قلاعًا في السماء وبحارًا من الضوء، بل أصبحت خطوطًا داكنة، ووجوهًا بلا ملامح، وأبوابًا مغلقة لا يعرف أحد إلى أين تؤدي.
+    </p>
+    <div class="chapter-num">الفصل ٨ من ٩</div>
+  </div>
+
+  <!-- ============ CHAPTER 9 ============ -->
+  <div class="page">
+    <div class="eyebrow">الفصل التاسع</div>
+    <h2>من يبقى بجانبك</h2>
+    <p>
+      حاولت أمه أن تفهم ما ي<span class="hl">ح</span>دث لابنها. جلست بجانبه كل ليلة، تحكي له قصصًا قديمة، تحاول أن تُ<span class="hl">ه</span>دّئ شيئًا بداخله لا تعرف اسمه، ولا تعرف من أين جاء.
+    </p>
+    <p class="dialogue">- إنت لسه ولدي الحلو، همست له ذات ليلة. مهما اتغيرت عينيك.</p>
+    <p>
+      أما <span class="hl">ن</span>يث، فكان مختلفًا في طريقته. لم يسأل فريدريك أسئلة كثيرة، ولم يبتعد عنه مثل باقي الأطفال. بل صار يقف بجانبه أكثر من أي وقت مضى، ويتشاجر مع أي طفل يهمس بكلمةٍ سيئة عن صديقه.
+    </p>
+    <p class="dialogue">- تاني حد يقول كلمة عن فريدريك، هتبقى المشكلة معايا أنا، كان يقولها نيث بصوتٍ عالٍ وسط الحي، وقبضتاه مشدودتان.</p>
+    <p>
+      في تلك الليلة، احت<span class="hl">ا</span>ضنه نيث بقوة، من غير كلام، ومن غير أسئلة. وكان هذا كافيًا لفريدريك، أكثر من أي كلام في العالم.
+    </p>
+    <p>
+      لكن الحلم عاد تلك الليلة، آخر مرة قبل أن تنقطع الحكاية هنا. وقف الرجل الأنيق أمامه من جديد، وابتسامته لم تتغير أبدًا.
+    </p>
+    <p class="dialogue">- علشان تفهم كلامي يا فريدريك، لازم تعدّ سبع خطوات للوراء.</p>
+    <p>
+      ثم همس بجملةٍ كاملة، لكنها خرجت من فمه مشفّرة، غريبة، لا تشبه أي لغة يعرفها أحد في سالستيا:
+    </p>
+    <p style="text-align:center; font-family:'Amiri',serif; font-size:16pt; color:#641414; letter-spacing:3px;">
+      "دبذدذ &nbsp; غخثورش &nbsp; يظخذد"
+    </p>
+    <p>
+      استيقظ فريدريك، والجملة لا تزال تتردد في رأسه، حرفًا حرفًا، كأنها تنتظر منه أن يفك شفرتها.
+    </p>
+    <div class="chapter-num">الفصل ٩ من ٩</div>
+  </div>
+
+  <!-- ============ CIPHER PUZZLE PAGE ============ -->
+  <div class="page">
+    <div class="stamp-corner">سري<br>جدًا</div>
+    <div class="eyebrow">قبل ما تقفلي الملف</div>
+    <h2>فكّي الشفرة</h2>
+    <p class="instructions">
+      الرجل في الحلم قال لفريدريك إنه علشان يفهم كلامه، لازم "يعدّ سبع خطوات للوراء". الجملة اللي قالها موجودة تحت... جربي تطبقي نفس الكلام عليها.
+    </p>
+    <div class="cipher-box">دبذدذ &nbsp; غخثورش &nbsp; يظخذد</div>
+    <p class="instructions">استخدمي ترتيب الحروف الأبجدي ده، وارجعي بكل حرف سبع خطوات للخلف:</p>
+    <div class="alphabet-strip">
+      <span>ا</span><span>ب</span><span>ت</span><span>ث</span><span>ج</span><span>ح</span><span>خ</span><span>د</span><span>ذ</span><span>ر</span><span>ز</span><span>س</span><span>ش</span><span>ص</span><span>ض</span><span>ط</span><span>ظ</span><span>ع</span><span>غ</span><span>ف</span><span>ق</span><span>ك</span><span>ل</span><span>م</span><span>ن</span><span>ه</span><span>و</span><span>ي</span>
+    </div>
+    <div class="whatsapp-note">
+      لما توصلي للجملة الصحيحة، ابعتيهالي على واتساب، وهبعتلك لينك الملف اللي بعده.
+    </div>
+  </div>
+
+  <!-- ============ FINAL LETTERS PAGE ============ -->
+  <div class="page">
+    <div class="eyebrow">قبل ما تسيبي الملف</div>
+    <h2>حروف متناثرة</h2>
+    <p class="instructions">
+      زي المرة اللي فاتت، في حروف مميزة اتخبت بين سطور الفصول اللي قريتيها. اجمعيها بترتيبها، واكتبيها في مكان أمين... مش لازم تبعتيها دلوقتي. هتحتاجيها تاني في وقت تاني.
+    </p>
+    <div class="final-note">
+      _ _ _ &nbsp; _ _ _ &nbsp; _ _ _ _ &nbsp; _ _ _ _ _ &nbsp; _ _ &nbsp; _ _ &nbsp; _ _ _ _ _ &nbsp; _ _ _
+    </div>
+    <div class="chapter-num">نهاية الملف الثاني</div>
+  </div>
+
+</body>
+</html>
