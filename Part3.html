@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>النبوءة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Markazi+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  #glitch-overlay{
+    position: fixed; inset: 0;
+    background: #050403;
+    display:none;
+    align-items: center; justify-content: center;
+    z-index: 9999;
+    overflow: hidden;
+  }
+  #glitch-overlay.show{ display:flex; }
+  .blood{
+    position:absolute;
+    background: radial-gradient(circle at 30% 30%, #7a0a10, #3d0508 70%);
+    border-radius: 42% 58% 63% 37% / 47% 44% 56% 53%;
+    filter: blur(1px);
+    opacity: .85;
+  }
+  .blood1{ width:34vw; height:30vw; top:-6vw; left:-8vw; }
+  .blood2{ width:26vw; height:24vw; bottom:-6vw; right:-5vw; border-radius: 58% 42% 37% 63% / 53% 56% 44% 47%; }
+  .blood3{ width:16vw; height:14vw; top:10%; right:8%; opacity:.6; }
+  .blood4{ width:20vw; height:18vw; bottom:12%; left:6%; opacity:.65; border-radius: 55% 45% 60% 40% / 40% 60% 45% 55%; }
+  .blood5{ width:10vw; height:9vw; top:50%; left:45%; opacity:.4; }
+  .glitching .blood{ animation: bloodPulse 0.4s steps(3,end) infinite; }
+  @keyframes bloodPulse{
+    0%{ opacity:.85; transform: scale(1); }
+    50%{ opacity:.55; transform: scale(1.03); }
+    100%{ opacity:.8; transform: scale(0.99); }
+  }
+  .glitching{ animation: overlayShake 0.15s steps(2,end) infinite; }
+  @keyframes overlayShake{
+    0%{ transform: translate(0,0); filter: brightness(1); }
+    25%{ transform: translate(-3px,2px); filter: brightness(1.15); }
+    50%{ transform: translate(3px,-2px); filter: brightness(.9); }
+    75%{ transform: translate(-2px,-3px); filter: brightness(1.1); }
+    100%{ transform: translate(2px,2px); filter: brightness(1); }
+  }
+  #glitch-text{
+    font-family: 'Aref Ruqaa', serif;
+    font-weight: 700;
+    font-size: 22vw;
+    color: #d8d2c4;
+    letter-spacing: 4px;
+    position: relative;
+    z-index: 2;
+  }
+  #glitch-text::before, #glitch-text::after{
+    content: "قاتل";
+    position: absolute; top:0; left:0; width:100%;
+  }
+  #glitch-text::before{ color: #b3121a; clip-path: inset(0 0 55% 0); transform: translate(-6px,-3px); }
+  #glitch-text::after{ color: #1ac6c6; clip-path: inset(55% 0 0 0); transform: translate(6px,3px); }
+  .glitching #glitch-text{ animation: glitchJitter 0.09s steps(2,end) infinite; }
+  .glitching #glitch-text::before{ animation: glitchSliceA 0.13s steps(2,end) infinite; }
+  .glitching #glitch-text::after{ animation: glitchSliceB 0.11s steps(2,end) infinite; }
+  @keyframes glitchJitter{
+    0%{ transform: translate(0,0) skewX(0deg); }
+    25%{ transform: translate(-4px,2px) skewX(2deg); }
+    50%{ transform: translate(3px,-3px) skewX(-3deg); }
+    75%{ transform: translate(-2px,-2px) skewX(1deg); }
+    100%{ transform: translate(2px,3px) skewX(0deg); }
+  }
+  @keyframes glitchSliceA{
+    0%{ clip-path: inset(0 0 60% 0); transform: translate(-8px,-2px); }
+    50%{ clip-path: inset(20% 0 30% 0); transform: translate(-3px,4px); }
+    100%{ clip-path: inset(0 0 70% 0); transform: translate(-10px,-4px); }
+  }
+  @keyframes glitchSliceB{
+    0%{ clip-path: inset(60% 0 0 0); transform: translate(8px,2px); }
+    50%{ clip-path: inset(30% 0 20% 0); transform: translate(3px,-4px); }
+    100%{ clip-path: inset(70% 0 0 0); transform: translate(10px,4px); }
+  }
+
+  :root{
+    --paper: #ece1c8;
+    --paper-light: #f7f1e1;
+    --paper-dark: #ddccA3;
+    --ink: #362a1e;
+    --ink-soft: #5c4a37;
+    --red: #8a2020;
+    --red-dark: #641414;
+    --gold: #a3854f;
+    --shadow: rgba(54, 42, 30, 0.28);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; min-height:100vh; background: var(--ink); font-family:'Markazi Text', serif; color: var(--ink); }
+  body{
+    background: radial-gradient(circle at 20% 10%, rgba(0,0,0,0.15), transparent 40%),
+                radial-gradient(circle at 80% 90%, rgba(0,0,0,0.2), transparent 45%), #2a2018;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding: 24px 12px 60px;
+  }
+  .stage{ width:100%; max-width:680px; position:relative; }
+  .screen{ display:none; }
+  .screen.active{ display:block; animation: rise .6s ease both; }
+  @keyframes rise{ from{ opacity:0; transform: translateY(18px); } to{ opacity:1; transform: translateY(0); } }
+  .card{
+    background: radial-gradient(circle at 15% 15%, rgba(255,255,255,0.5), transparent 25%),
+                radial-gradient(circle at 85% 90%, rgba(0,0,0,0.06), transparent 35%), var(--paper);
+    border:1px solid var(--paper-dark);
+    box-shadow: 0 18px 40px var(--shadow), inset 0 0 60px rgba(163,133,79,0.12);
+    border-radius: 4px; padding: 34px 30px 28px; position:relative;
+  }
+  .card::before{ content:""; position:absolute; inset:10px; border:1px solid rgba(163,133,79,0.45); pointer-events:none; }
+  h1,h2,h3{ font-family:'Aref Ruqaa', serif; margin:0 0 10px; color: var(--ink); letter-spacing: .5px; }
+  .eyebrow{
+    font-family:'Aref Ruqaa', serif; font-size: 14px; letter-spacing: 3px; color: var(--red);
+    border-bottom: 1px solid rgba(138,32,32,0.35); display:inline-block; padding-bottom: 4px; margin-bottom: 16px;
+  }
+  p{ line-height: 2; font-size: 20px; color: var(--ink-soft); margin: 0 0 16px; text-align:justify; }
+  p.dialogue{ padding-right: 14px; border-right: 3px solid rgba(138,32,32,0.3); color: var(--ink); }
+  .btnrow{ display:flex; gap:10px; justify-content:flex-end; margin-top: 22px; flex-wrap:wrap; }
+  button.action{
+    font-family:'Aref Ruqaa', serif; font-size: 19px; background: var(--red); color: var(--paper-light);
+    border: none; padding: 11px 26px; border-radius: 2px; cursor:pointer; letter-spacing: 1px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25); transition: transform .15s ease, box-shadow .15s ease;
+  }
+  button.action:hover{ transform: translateY(-2px); box-shadow: 0 9px 18px rgba(0,0,0,0.3); }
+  button.action:active{ transform: translateY(0); }
+  button.action:focus-visible{ outline: 3px solid var(--gold); outline-offset:2px; }
+  button.action.ghost{ background: transparent; color: var(--ink-soft); border: 1px solid var(--paper-dark); box-shadow:none; }
+  .stampline{ display:flex; align-items:center; justify-content:space-between; margin-top: 26px; padding-top: 14px; border-top: 1px dashed rgba(163,133,79,0.5); }
+  .chapter-tag{ font-family:'Aref Ruqaa', serif; font-size: 13px; color: var(--ink-soft); letter-spacing: 2px; }
+  #screen-welcome .card{ text-align:center; padding: 50px 26px 40px; }
+  .welcome-title{ font-size: 40px; margin-bottom: 6px; }
+  .welcome-sub{ font-family:'Markazi Text',serif; color: var(--ink-soft); font-size: 20px; margin-bottom: 28px; }
+  .seal{ width: 120px; height:120px; margin: 0 auto 26px; border: 3px double var(--red); border-radius: 50%;
+    display:flex; align-items:center; justify-content:center; font-family:'Aref Ruqaa', serif; font-size: 20px; color: var(--red); }
+  .progress{ display:flex; gap:8px; justify-content:center; margin-bottom: 18px; }
+  .progress span{ width:9px; height:9px; border-radius:50%; background: rgba(163,133,79,0.35); }
+  .progress span.done{ background: var(--red); }
+  .riddle-box{
+    background: var(--paper-light); border: 1px dashed var(--gold); padding: 20px 18px; margin: 10px 0 20px;
+    font-family: 'Aref Ruqaa', serif; font-size: 19px; line-height: 2.1; color: var(--red-dark); text-align:center;
+  }
+  .statement{ font-size: 19px; line-height: 1.9; color: var(--ink); margin: 0 0 10px; padding-right: 10px; }
+  .statement b{ color: var(--red); font-family:'Aref Ruqaa', serif; }
+  .ans-input{
+    width:100%; font-family:'Markazi Text', serif; font-size: 22px; padding: 12px 14px;
+    border: 1px solid var(--paper-dark); background: var(--paper-light); color: var(--ink); border-radius: 2px; direction: rtl;
+  }
+  .ans-input:focus{ outline: 2px solid var(--gold); }
+  .error-msg{ color: var(--red); font-size:17px; margin-top:8px; display:none; }
+  .error-msg.show{ display:block; }
+  .code-box{
+    background: var(--paper-light); border: 1px dashed var(--gold); padding: 18px 16px; font-family:'Aref Ruqaa', serif;
+    font-size: 20px; text-align:center; color: var(--red-dark); margin: 18px 0; line-height: 1.8;
+  }
+  .drive-link{ display:inline-block; margin-top: 6px; color: var(--red); text-decoration: underline; font-family:'Aref Ruqaa', serif; font-size: 19px; }
+  @media (max-width: 480px){ p{ font-size: 18px; } .welcome-title{ font-size: 32px; } .card{ padding: 26px 18px 22px; } }
+</style>
+</head>
+<body>
+<div id="glitch-overlay">
+  <div class="blood blood1"></div>
+  <div class="blood blood2"></div>
+  <div class="blood blood3"></div>
+  <div class="blood blood4"></div>
+  <div class="blood blood5"></div>
+  <div id="glitch-text">قاتل</div>
+</div>
+<div class="stage">
+
+  <!-- ============ WELCOME ============ -->
+  <section class="screen active" id="screen-welcome">
+    <div class="card">
+      <div class="seal">سالستيا</div>
+      <div class="eyebrow">الملف الثالث</div>
+      <h1 class="welcome-title">النبوءة</h1>
+      <p class="welcome-sub">الباب انفتح قليلًا... وما ورائه لم يعد يشبه ما قبله.</p>
+      <button class="action" onclick="goTo('screen-ch10')">تابعي القراءة</button>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 10 ============ -->
+  <section class="screen" id="screen-ch10">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span></span><span></span><span></span><span></span></div>
+      <div class="eyebrow">الفصل العاشر</div>
+      <h2>الباب الذي انفتح قليلاً</h2>
+      <p>جلس فريدريك في غرفته وحيدًا، والمفتاح الذي وضعه الرجل الغريب في كلماته المشفّرة لا يزال يتردد في ذهنه: سبع خطواتٍ إلى الوراء. أخذ ورقةً وقلمًا، وبدأ يكتب الأبجدية كاملةً، حرفًا حرفًا، ثم عاد بكل حرفٍ من الجملة الغامضة سبع خطواتٍ إلى الخلف، حتى ظهرت أمامه العبارة كاملةً، واضحةً لا لبس فيها: "الباب سينفتح قليلًا."</p>
+      <p>جلس طويلًا يحدّق في الورقة. لم يفهم المعنى، لكنه شعر بيقينٍ غريب أن هذه الكلمات لم تُكتب عبثًا. فتح دفتر مذكراته الذي لم يكتب فيه من قبل سوى رسومات متناثرة، وكتب تحتها بخطٍّ مرتجف: "الباب سينفتح قليلًا. يجب أن أتذكّر هذا."</p>
+      <p>في تلك الليلة، لم يزره الرجل الأنيق كما اعتاد. بل زاره كائنٌ آخر، مختلفٌ كل الاختلاف: هيئةٌ بيضاء ناصعة، بلا ملامح تُذكر، لا عينين ولا فمًا يمكن تمييزه، وكأن الضوء نفسه اتخذ شكل إنسان. لم يكن مخيفًا كما توقع فريدريك أن يكون؛ بل كان هادئًا، ثقيلًا، بردٌ يسكن العظام قبل أن يسكن الجلد، وكأن كل شيءٍ حيٍّ في الغرفة قد حبس أنفاسه احترامًا لشيءٍ أكبر منه.</p>
+      <p>لاحظ فريدريك، بذعرٍ لم يستطع تفسيره، أن ظله هو — ظله وحده — لم يتحرك مع حركة الكائن، بل بقي ممددًا على الحائط في وضعٍ لا يشبه وضعه هو، وكأن جزءًا منه قد سبقه إلى مكانٍ آخر، وترك خلفه هذا الجسد الصغير النائم يتظاهر بأنه كل ما تبقّى منه.</p>
+      <p class="dialogue">- من أنت؟ سأل فريدريك بصوتٍ أقل ارتعاشًا مما توقع.</p>
+      <p>لم يُجب الكائن مباشرة. وقف صامتًا طويلًا، وكأنه يزن كل كلمةٍ قبل أن يهبها للهواء، فالكلام عنده ثمينٌ لا يُبذَّر.</p>
+      <p class="dialogue">- الأسماء لا تعني شيئًا لمن لا بداية له، يا فريدريك. اسمعني جيدًا، فلن أكرر: لا تتبع كلام الشيطان.</p>
+      <p>تجمّد فريدريك في مكانه.</p>
+      <p class="dialogue">- الشيطان؟ ما هذه الكلمة؟ لم أسمعها من قبل.</p>
+      <p>نظر إليه الكائن طويلًا، وكأن صمته يحمل حزنًا لا يوصف، حزنًا أقدم من سالستيا نفسها، حزن من رأى ألف طفلٍ بريء يتحول إلى شيءٍ آخر، ولم يستطع مرةً واحدة أن يمنع ذلك.</p>
+      <p class="dialogue">- ستعرف، حين لا يعود للمعرفة نفع. هذا قدر كل من يُولد بريئًا: أن يفهم متأخرًا. والآن، قبل أن أذهب إلى حيث لا مكان، خذ هذا معك:</p>
+      <p style="text-align:center; font-family:'Aref Ruqaa',serif; color:var(--red-dark); font-size:19px; line-height:2.2;">
+        "لا صوتَ لي، لكنّ صمتي يهدم الممالك.<br>
+        لا يدَ لي، لكنّني أعري كل شيءٍ من قناعه.<br>
+        أُحَبُّ حين أُفتقد، وأُلعن حين أُشعَر.<br>
+        أنا اللصّ الذي لا يُحاكَم، والقاضي الذي لا يُرشى.<br>
+        من أنا؟"
+      </p>
+      <p>قبل أن يستطيع فريدريك أن يسأل، تلاشى الكائن كما لو أنه لم يكن، وبقي السؤال معلّقًا في الهواء، ينتظر إجابةً لم تأتِ بعد. وفكّر فريدريك، وهو يحدّق في السقف بقية الليل، أن ثمة أشياء تُقال لنا لا لأننا نستحق معرفتها، بل لأن قول الحقيقة أخف على قائلها من حملها وحده إلى الأبد.</p>
+      <p>لم ينم بعدها. وحين أغمض عينيه أخيرًا قرب الفجر، سمع — أو ظنّ أنه سمع — صوت شيءٍ يتنفس تحت سريره، ببطءٍ، وبانتظام، كما لو كان ينتظر منذ سنين أن يكبر فريدريك بما يكفي ليسمعه.</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-welcome')">السابق</button>
+        <span class="chapter-tag">١٠ / ١٤</span>
+        <button class="action" onclick="goTo('screen-ch11')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 11 ============ -->
+  <section class="screen" id="screen-ch11">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span></span><span></span><span></span></div>
+      <div class="eyebrow">الفصل الحادي عشر</div>
+      <h2>سؤالٌ لم يُجب عنه أحد</h2>
+      <p>في صباح اليوم التالي، وجد فريدريك أمه تُعدّ الفطور كعادتها، فجلس أمامها وسألها مباشرة، بصوتٍ يحمل فضولًا صادقًا لا يعرف الخوف بعد:</p>
+      <p class="dialogue">- أمي، ما معنى كلمة "الشيطان"؟</p>
+      <p>توقفت يدُ أمه عن الحركة للحظة، ثم التفتت إليه ببطء.</p>
+      <p class="dialogue">- من أين سمعتَ هذه الكلمة يا بني؟</p>
+      <p class="dialogue">- سمعتها في حلم. من كان يبدو... مختلفًا.</p>
+      <p>فكّرت أمه طويلًا، وعلى وجهها ارتسمت علاماتُ حيرةٍ صادقة.</p>
+      <p class="dialogue">- لا أعرف، يا فريدريك. لم أسمع بهذه الكلمة من قبل في حياتي، ولا أذكر أن أحدًا في سالستيا ذكرها أمامي. ربما... ربما كانت كلمةً من زمنٍ قديم، انتهى قبل أن نُولد نحن.</p>
+      <p>لم يقتنع فريدريك بهذا الجواب. فكّر أن معلّمه في المدرسة، الذي يحفظ تاريخ سالستيا القديم عن ظهر قلب، قد يملك إجابةً أوضح.</p>
+      <p>وفي حصة التاريخ، رفع يده وسأل معلّمه أمام الجميع:</p>
+      <p class="dialogue">- أستاذ، ما معنى كلمة "الشيطان"؟</p>
+      <p>ساد الفصل صمتٌ ثقيل. توقّف المعلّم عن الكتابة على السبورة، واستدار ببطءٍ شديد، ووجهه قد فقد لونه تمامًا. حدّق في فريدريك طويلًا، وكأنه يرى شيئًا غير الطفل الجالس أمامه.</p>
+      <p class="dialogue">- من أين... من أين سمعتَ هذه الكلمة؟</p>
+      <p class="dialogue">- من حلم، أستاذ. لماذا يبدو الجميع خائفًا هكذا؟</p>
+      <p>ارتجفت يد المعلّم حتى سقطت الطباشيرة من بين أصابعه وتحطمت على الأرض بصوتٍ بدا أعلى بكثير مما ينبغي. أخذ نفَسًا مسموعًا، متقطعًا، أشبه بمن يحاول أن يبتلع صرخة، وتراجع خطوةً، ثم أخرى، وعيناه لا تفارقان وجه الطفل، وكأنه يخشى أن يلتفت فيجد شيئًا قد اقترب أكثر. ثم غادر الفصل مسرعًا دون أن يلتفت، وسُمع من خلف الباب صوت تقيّؤه في الممر، وصوت زميلٍ آخر يسأله بذعرٍ: "ماذا رأيت؟ ماذا قال لك بالضبط؟"، ولم يُجب.</p>
+      <p>جلس فريدريك في مكانه، وسط عشرات العيون الصغيرة التي تنظر إليه الآن كما يُنظر إلى شيءٍ سقط للتو من عالمٍ آخر. لم يفهم ما الذي فعله ليستحق كل هذا الخوف. لكنه، للمرة الأولى، شعر بشيءٍ غريب يتحرك بداخله رفقة الخوف: فضولٌ بارد، يكاد يكون متعة صغيرة، تجاه القدرة على إخافة من حوله بمجرد كلمة. كره نفسه على هذا الشعور فور أن لاحظه، لكنه لم يستطع محوه.</p>
+      <p>جلس هناك، يشعر لأول مرة في حياته بشيءٍ يشبه العزلة الحقيقية: أن يحمل سؤالًا لا يجرؤ أحدٌ على الاقتراب منه، فما بالك بالإجابة عنه. وفي تلك اللحظة بالذات، بدأ يفهم — بلا كلماتٍ بعد، بمجرد إحساسٍ ثقيل يستقر في صدره — أن هناك نوعًا من المعرفة لا تُعطى، بل تُنتَزع من صاحبها انتزاعًا، وأن الجهل أحيانًا ليس نقصًا، بل رحمةٌ تحفظ الإنسان من أن يرى نفسه كما يراه الآخرون: شيئًا يُخاف منه، لا شيئًا يُحَب. وفكّر، بصفاءٍ أفزعه أكثر من كل ما سبق: ماذا لو لم يكن الخوف الذي يراه في عيونهم خطأً؟ ماذا لو كانوا يرون شيئًا حقيقيًا، لم يكتشفه هو بعد في نفسه؟</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch10')">السابق</button>
+        <span class="chapter-tag">١١ / ١٤</span>
+        <button class="action" onclick="goTo('screen-ch12')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 12 ============ -->
+  <section class="screen" id="screen-ch12">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span></span><span></span></div>
+      <div class="eyebrow">الفصل الثاني عشر</div>
+      <h2>النبوءة</h2>
+      <p>لم تكن حادثة المعلّم لتمر دون أن تترك أثرًا. تسربت القصة بين الناس كالنار في الهشيم: "الطفل الذي يحمل عيون الظلام سأل عن الشيطان". لم يفهم أحدٌ تمامًا معنى ما حدث، لكن الخوف لا يحتاج إلى فهمٍ كامل ليتفشى.</p>
+      <p>بدأ الكبار يتحدثون فيما بينهم عن نبوءةٍ قديمة، نبوءةٍ تعود إلى زمن أريس، البطل الراحل الذي حرّر سالستيا من الحروب والأوبئة، وأسّس عصر السلام الذي يعيشه الجميع الآن. قصة أريس تُروى للأطفال كحكايةٍ مقدّسة: كيف قاد الجيوش في آخر معاركها، وكيف سقط في تلك المعركة الأخيرة ذاتها، مضرّجًا بدمه، ليمنح شعبه سلامًا لم يذوقوه من قبل. مات أريس، ووُلد السلام من رماد موته، ومنذ ذلك اليوم، عاشت سالستيا في هدوءٍ دام أحد عشر عامًا كاملة، هي ذاتها السنوات التي عاشها فريدريك منذ ولادته.</p>
+      <p>لكن الحكاية التي تُروى للأطفال، كعادة كل الحكايات المقدّسة، تحذف ما لا يُطاق سماعه. لا أحد يروي كيف أن آخر معركة لم تكن بين جيشين متكافئين، بل كانت مذبحةً استمرت ثلاثة أيامٍ متصلة، حتى صار النهر القريب من سالستيا أحمر لأسابيع، ولم يعد أهل تلك المنطقة يشربون منه حتى بعد أن صفا لونه، لأن الذاكرة لا تصفو كما يصفو الماء. ولا أحد يروي أن أريس نفسه، في لياليه الأخيرة، لم يكن يحلم بالنصر، بل كان يستيقظ صارخًا، يرى وجوه من قتلهم بيده، ويهمس لمن حوله أن السلام الذي يبنيه ليس نقيض الحرب، بل ثمنها، وأن الأثمان لا تُدفع مرة واحدة، بل تُقسَّط على الأجيال التي لم تختر شيئًا.</p>
+      <p>لكن قلّة من الناس كانوا يعرفون الجزء الآخر من القصة: أن أريس، قبل أن يسقط، همس بنبوءةٍ لمن كان بجانبه، نبوءةٍ قال فيها إن السلام لن يدوم إلى الأبد، وإن طفلًا سيُولد يومًا يحمل في عينيه لونًا لم تعرفه سالستيا من قبل، لونًا يشبه الدم الذي أُريق في آخر الحروب، وأن هذا الطفل سيكون إما آخر درعٍ يحمي هذا السلام، أو أول من يهدمه.</p>
+      <p>لم يكن أحد يذكر هذه النبوءة صراحة أمام فريدريك. لكنه بدأ يلاحظ نظرات الناس تتغيّر: خوفٌ ممزوجٌ بشيءٍ أشبه بالترقّب، وكأنهم ينتظرون منه أن يفعل شيئًا، أو ألا يفعله. وأسوأ ما في الانتظار، أن من يُنتَظر منه الشر، يبدأ — ببطءٍ، وبلا قرارٍ واعٍ منه — يبحث في نفسه عن هذا الشر، فقط ليتأكد أنه ما زال إنسانًا قادرًا على خيانة توقعات من حوله، لا مجرد نبوءةٍ تمشي على قدمين.</p>
+      <p>وما لم يكن يعرفه أحدٌ في سالستيا، لا الكبار الذين يروون الحكاية، ولا الأطفال الذين يخافون بلا سبب واضح، أن كل سلامٍ وُلد من معركة، وكل هدوءٍ بُني على جثة، وأن الأرض التي تفخر بأنها لا تعرف الحروب، إنما تعيش فوق حربٍ واحدة انتهت، لا فوق عالمٍ لم يعرف الحرب قط. السلام، حين يُبنى على الدم، يظل يحمل رائحته في تربته، مهما زرعوا فوقها من ورد.</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch11')">السابق</button>
+        <span class="chapter-tag">١٢ / ١٤</span>
+        <button class="action" onclick="goTo('screen-ch13')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 13 ============ -->
+  <section class="screen" id="screen-ch13">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span></span></div>
+      <div class="eyebrow">الفصل الثالث عشر</div>
+      <h2>العجوز</h2>
+      <p>في مساءٍ باردٍ نسبيًا على غير عادة سالستيا، وبينما كان فريدريك يسير وحيدًا عائدًا من المدرسة، تجنّبًا للطريق المزدحم الذي بات يخنقه بنظرات الناس، اعترض طريقه رجلٌ عجوز، يسكن طرف الحي، يعرفه الجميع باسم "العجوز المجنون"، لأنه يتحدث كثيرًا عن أشياء لا يفهمها أحد.</p>
+      <p class="dialogue">- أخيرًا... التقينا، يا ابن النبوءة. قال العجوز بصوتٍ متهدّج، وعيناه تلمعان بشيءٍ بين الحكمة والجنون.</p>
+      <p>توقّف فريدريك، بين الفضول والحذر. لاحظ أن يدَي العجوز ترتجفان بلا توقف، لا من البرد، بل كمن يحمل شيئًا ثقيلًا منذ سنين ولم يعد يقوى على حمله، وأن رائحةً غريبة تفوح منه، أشبه برائحة الورق القديم حين يحترق ببطء.</p>
+      <p class="dialogue">- ماذا تعرف عن النبوءة؟ سأله مباشرة، متجاوزًا كل أدب كان يُفترض أن يتحلّى به أمام رجلٍ في عمر جدّه.</p>
+      <p>ابتسم العجوز ابتسامةً غريبة، لا تصل إلى عينيه أبدًا، وجلس على حجرٍ قريب، وكأنه ينوي أن يروي حكايةً طويلة.</p>
+      <p class="dialogue">- استمع جيدًا، فلن أُعيد. الحقيقة لا تُقال مرتين لمن لا يستحقها. وسأقول لك أربعة أشياء الآن، وأنا نفسي لم أعد أذكر أيّها الكذب، وأيّها العقاب.</p>
+      <p class="statement"><b>أولًا:</b> الطفل الذي رأيتُ عينيه من قبل، لم يعش ليروي حكايته؛ فمن يحمل مثل هذا اللون في عينيه، لا يُمهله القدر طويلًا.</p>
+      <p class="statement"><b>ثانيًا:</b> صديقك الصاخب، الذي تحسبه درعك اليوم، سيكون يومًا ما إما قاتلك أو مخلّصك، ولن تعرف أيّهما حتى يفوت الأوان لتختار.</p>
+      <p class="statement"><b>ثالثًا:</b> أريس لم يمت في المعركة كما يُروى للأطفال؛ فبعض القتلى يُدفنون وهم أحياء، حين يُقرَّر أن موتهم أنفع للأحياء من حياتهم.</p>
+      <p class="statement"><b>رابعًا:</b> لستَ آخر من سيحمل هذه اللعنة في عينيه، ولن تكون الأخير الذي يُنبَذ من أجلها. فالأرض التي تخاف الظلام، تُنتج ظلامًا جديدًا في كل جيل، لتُذكّر نفسها بأنها ما زالت قادرة على الخوف.</p>
+      <p>صمت العجوز طويلًا بعدها، وقد بدت عيناه فارغتين للحظة، كمن يستمع إلى صوتٍ لا يسمعه أحدٌ سواه.</p>
+      <p class="dialogue">- من أخبرك بهذا كله؟ سأله فريدريك أخيرًا، بصوتٍ أقل ثباتًا مما أراد. من الذي حدّثك عن النبوءة؟</p>
+      <p>تغيّرت ملامح العجوز فجأة، وكأن السؤال أيقظ فيه ذكرى مؤلمة.</p>
+      <p class="dialogue">- كائنٌ أبيض، لا ملامح له، زارني في حلمي منذ سنين طويلة، كما يزورك الآن على ما أظن. حذّرني كما حذّرك، بالكلمات ذاتها: "إياك أن تتبع كلام الشيطان، فليس صديقًا لأحد". ولم أفهم يومها، كما لن تفهم أنت الآن، أن التحذير نفسه قد يكون أول أبواب الفخ، لا آخرها.</p>
+      <p>اتسعت عينا فريدريك دهشةً، لكن قبل أن ينطق بكلمة، وقف العجوز، وابتسم ابتسامةً هادئة مليئة بالأسرار.</p>
+      <p class="dialogue">- احتفظ بكلماتي، يا فريدريك. لن تفهمها اليوم، ولا غدًا. لكنها ستنتظرك، في يومٍ لم يُكتب بعد. سنلتقي مرةً أخرى، إن كان كلامي كله صحيحًا... أو حتى إن لم يكن.</p>
+      <p>ثم استدار، وسار ببطءٍ نحو الظلال المتراكمة عند نهاية الشارع. وفي اللحظة التي ابتلعه فيها الظلام تمامًا، سمع فريدريك — بوضوحٍ لم يستطع إنكاره لاحقًا مهما حاول — صوت ضحكةٍ خافتة، لم تكن تشبه ضحكة عجوز، بل ضحكة شيءٍ أصغر سنًا بكثير، مختبئ داخل ذلك الجسد المتهالك منذ زمنٍ طويل.</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch12')">السابق</button>
+        <span class="chapter-tag">١٣ / ١٤</span>
+        <button class="action" onclick="goToCh14()">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 14 ============ -->
+  <section class="screen" id="screen-ch14">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span></div>
+      <div class="eyebrow">الفصل الرابع عشر</div>
+      <h2>الوحدة تزداد</h2>
+      <p>بعد لقاء العجوز، بدا فريدريك مختلفًا في نظر من حوله، وإن كان هو نفسه بالكاد يفهم لماذا. انتشرت الحكاية عن "الرجل الذي يعرف النبوءة" والتقى الطفل ذا العينين القرمزيتين، حتى وصلت إلى كل بيتٍ في الحي.</p>
+      <p>بدأ الآباء يمنعون أبناءهم من اللعب بالقرب منه. كانت الأمهات يسحبن أطفالهن بعيدًا كلما مرّ من الشارع، بنظراتٍ لا تخفي خوفًا صار عاديًا الآن. حتى الأطفال الذين لم يعرفوا شيئًا عن النبوءة، تعلّموا الخوف من فريدريك بمجرد مراقبة كبارهم. وكان أقسى ما فيها ليس نظرات الغرباء، بل أن أمه نفسها، في لحظاتٍ قصيرة لا يظنّ أنها تنتبه إليها، صارت تنظر إليه أحيانًا بنفس تلك النظرة، قبل أن تتذكر أنها أمه، وتبتلع الخوف، وتبتسم ابتسامةً متأخرة قليلًا عن موعدها.</p>
+      <p>في أحد الأيام، دعت أم نيث ابنها إلى غرفتها، وأغلقت الباب خلفهما.</p>
+      <p class="dialogue">- نيث، حبيبي... أريدك أن تبتعد عن فريدريك لبعض الوقت. قالت بصوتٍ حذر، تحاول أن تبدو هادئة أكثر مما تشعر.</p>
+      <p class="dialogue">- لماذا؟ سأل نيث مباشرة، وقد بدأت ملامحه تتصلّب.</p>
+      <p class="dialogue">- الناس يتحدثون، يا بني. وأنا... أخاف عليك.</p>
+      <p class="dialogue">- الناس يتحدثون دائمًا يا أمي. وفريدريك صديقي منذ كنا في المهد. لن أتركه لمجرد أن الناس قرروا أن عينيه تخيفهم.</p>
+      <p>حاولت أمه أن تقنعه، لكنه وقف، وقال بحزمٍ لم تعتده منه من قبل:</p>
+      <p class="dialogue">- إذا كان الجميع سيتخلّى عنه، فلن أكون أنا واحدًا منهم. هذا قراري، وليس قراركِ.</p>
+      <p>خرج نيث من الغرفة تاركًا أمه في صمتٍ مثقل بالقلق والفخر معًا. لم تكن تعرف، وهي تراقبه يبتعد في الممر، أن الحب الأعمى أحيانًا لا يقل خطورةً عن الخوف الأعمى؛ فكلاهما يجعل صاحبه يسير نحو شيءٍ لا يراه بوضوح، واثقًا أنه يفعل الصواب.</p>
+      <p>أما فريدريك، فجلس تلك الليلة عند نافذته كعادته، يرسم بلا هدف واضح، بينما تتردد في ذهنه كلماتٌ ثلاث لا يفهم معناها بعد: النبوءة، الشيطان، والوقت. وشعر، لأول مرة، أن هذه الكلمات الثلاث قد تكون مرتبطة ببعضها بطريقةٍ لم يكتشفها أحد بعد.</p>
+      <p>نظر إلى ورقته، فوجد يده قد رسمت — من غير قصدٍ منه — عصفورًا صغيرًا، بلا حياة، ملقًى على جنبه، وطفلًا يقف فوقه بلا ملامح. مزّق الورقة، لكن الصورة بقيت محفورة خلف عينيه. بدأ يفهم، ببطءٍ موجع، أن الوحدة ليست غيابَ الناس من حوله، بل غيابَ من يستطيع أن يرى ما بداخله ولا يهرب. وأن هناك فرقًا هائلًا، لم يكن يعرفه من قبل، بين أن يُخاف منك، وأن تُفهَم. الأول يُبعد الناس عنك. أما الثاني، فقد لا يجده المرء طوال حياته، حتى لو عاش محاطًا بألفٍ ممن يدّعون حبه.</p>
+      <p>وفي عمق تلك الليلة، بين اليقظة والنوم، سمع صوتًا يهمس باسمه، لم يكن صوت الرجل الأنيق، ولا صوت الكائن الأبيض، بل صوتًا ثالثًا، أعمق، وكأنه يخرج من صدره هو لا من خارجه: "أحسنت اليوم يا فريدريك. الخوف الذي زرعته في عيونهم كان جميلًا." فتح عينيه فزعًا، والغرفة فارغة كما ينبغي أن تكون، لكنه لم يستطع، مهما حاول، أن يقنع نفسه بأن الصوت لم يكن صوته هو.</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch13')">السابق</button>
+        <span class="chapter-tag">١٤ / ١٤</span>
+        <button class="action" onclick="goTo('screen-riddle')">إلى الملف التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PUZZLE 1: RIDDLE ============ -->
+  <section class="screen" id="screen-riddle">
+    <div class="card">
+      <div class="eyebrow">قبل المتابعة</div>
+      <h2>لغز الكائن الأبيض</h2>
+      <div class="riddle-box">
+        "لا صوتَ لي، لكنّ صمتي يهدم الممالك.<br>
+        لا يدَ لي، لكنّني أعري كل شيءٍ من قناعه.<br>
+        أُحَبُّ حين أُفتقد، وأُلعن حين أُشعَر.<br>
+        أنا اللصّ الذي لا يُحاكَم، والقاضي الذي لا يُرشى.<br>
+        من أنا؟"
+      </div>
+      <input type="text" id="riddle-input" class="ans-input" placeholder="اكتبي إجابتك هنا..." dir="rtl">
+      <div class="error-msg" id="riddle-error">مش الإجابة الصح... فكري تاني.</div>
+      <div class="btnrow">
+        <button class="action ghost" onclick="goTo('screen-ch14')">السابق</button>
+        <button class="action" onclick="checkRiddle()">تأكيد</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OLD MAN'S WORDS: KEEP FOR LATER ============ -->
+  <section class="screen" id="screen-keepsake">
+    <div class="card">
+      <div class="eyebrow">قبل ما تسيبي الملف</div>
+      <h2>كلام العجوز</h2>
+      <p class="statement"><b>أولًا:</b> الطفل الذي رأيتُ عينيه من قبل، لم يعش ليروي حكايته؛ فمن يحمل مثل هذا اللون في عينيه، لا يُمهله القدر طويلًا.</p>
+      <p class="statement"><b>ثانيًا:</b> صديقك الصاخب، الذي تحسبه درعك اليوم، سيكون يومًا ما إما قاتلك أو مخلّصك، ولن تعرف أيّهما حتى يفوت الأوان لتختار.</p>
+      <p class="statement"><b>ثالثًا:</b> أريس لم يمت في المعركة كما يُروى للأطفال؛ فبعض القتلى يُدفنون وهم أحياء، حين يُقرَّر أن موتهم أنفع للأحياء من حياتهم.</p>
+      <p class="statement"><b>رابعًا:</b> لستَ آخر من سيحمل هذه اللعنة في عينيه، ولن تكون الأخير الذي يُنبَذ من أجلها. فالأرض التي تخاف الظلام، تُنتج ظلامًا جديدًا في كل جيل، لتُذكّر نفسها بأنها ما زالت قادرة على الخوف.</p>
+      <div class="btnrow" style="justify-content:center;">
+        <button class="action" onclick="goTo('screen-result')">تابعي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section class="screen" id="screen-result">
+    <div class="card" style="text-align:center;">
+      <div class="eyebrow">نتيجة التحقيق</div>
+      <h2>الملف اتفتح</h2>
+      <p style="font-size:18px;">لغزين اتحلوا صح. الملف اللي بعده جاهز يتفتح.</p>
+      <div class="code-box" id="drive-box">
+        الجزء التالي من الملف هنا:<br>
+        <a id="drive-link" class="drive-link" href="#" target="_blank" rel="noopener">فتح الرابط</a>
+      </div>
+      <div class="btnrow" style="justify-content:center;">
+        <button class="action" onclick="sendWhatsapp()">إرسال إجاباتي على واتساب</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const DRIVE_LINK = "PUT_DRIVE_LINK_HERE"; // <-- استبدل ده بلينك الجزء الرابع لما يجهز
+const WHATSAPP_NUMBER = "201033707583";
+
+function normalizeAr(str){
+  return (str || "")
+    .replace(/[\u064B-\u0652\u0670\u0640]/g, "")
+    .replace(/[إأآا]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ئ/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ة/g, "ه")
+    .replace(/[^؀-ۿ0-9a-zA-Z]/g, "")
+    .toLowerCase();
+}
+
+function levenshtein(a, b){
+  const m = a.length, n = b.length;
+  if(m === 0) return n;
+  if(n === 0) return m;
+  const dp = Array.from({length: m+1}, () => new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0] = i;
+  for(let j=0;j<=n;j++) dp[0][j] = j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      const cost = a[i-1] === b[j-1] ? 0 : 1;
+      dp[i][j] = Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+cost);
+    }
+  }
+  return dp[m][n];
+}
+
+function fuzzyMatch(input, accepted, toleranceRatio = 0.3){
+  const normInput = normalizeAr(input);
+  if(!normInput) return false;
+  return accepted.some(acc => {
+    const normAcc = normalizeAr(acc);
+    const dist = levenshtein(normInput, normAcc);
+    const tolerance = Math.max(1, Math.floor(normAcc.length * toleranceRatio));
+    return dist <= tolerance || normInput.includes(normAcc) || normAcc.includes(normInput);
+  });
+}
+
+function goTo(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+let glitchShown = false;
+function goToCh14(){
+  goTo('screen-ch14');
+  if(!glitchShown){
+    glitchShown = true;
+    setTimeout(showGlitch, 900);
+  }
+}
+function showGlitch(){
+  const overlay = document.getElementById('glitch-overlay');
+  overlay.classList.add('show', 'glitching');
+  setTimeout(() => {
+    overlay.classList.remove('show', 'glitching');
+  }, 1500);
+}
+
+let riddleSolved = false;
+
+function checkRiddle(){
+  const val = document.getElementById("riddle-input").value;
+  const ok = fuzzyMatch(val, ["الوقت", "وقت", "الزمن", "زمن"], 0.2);
+  const errorEl = document.getElementById("riddle-error");
+  if(ok){
+    errorEl.classList.remove("show");
+    riddleSolved = true;
+    document.getElementById("drive-link").href = DRIVE_LINK;
+    goTo("screen-keepsake");
+  } else {
+    errorEl.classList.add("show");
+  }
+}
+
+function sendWhatsapp(){
+  const riddleAns = document.getElementById("riddle-input").value || "";
+  const text = encodeURIComponent(
+    "إجابات يارا - النبوءة\n\nلغز الكائن الأبيض: " + riddleAns
+  );
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, "_blank");
+}
+</script>
+</body>
+</html>
