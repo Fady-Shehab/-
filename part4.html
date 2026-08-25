@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>الختم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Markazi+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  #glitch-overlay{
+    position: fixed; inset: 0;
+    background: #050403;
+    display:none;
+    align-items: center; justify-content: center;
+    z-index: 9999;
+    overflow: hidden;
+  }
+  #glitch-overlay.show{ display:flex; }
+  .blood{
+    position:absolute;
+    background: radial-gradient(circle at 30% 30%, #7a0a10, #3d0508 70%);
+    border-radius: 42% 58% 63% 37% / 47% 44% 56% 53%;
+    filter: blur(1px);
+    opacity: .85;
+  }
+  .blood1{ width:34vw; height:30vw; top:-6vw; left:-8vw; }
+  .blood2{ width:26vw; height:24vw; bottom:-6vw; right:-5vw; border-radius: 58% 42% 37% 63% / 53% 56% 44% 47%; }
+  .blood3{ width:16vw; height:14vw; top:10%; right:8%; opacity:.6; }
+  .blood4{ width:20vw; height:18vw; bottom:12%; left:6%; opacity:.65; border-radius: 55% 45% 60% 40% / 40% 60% 45% 55%; }
+  .blood5{ width:10vw; height:9vw; top:50%; left:45%; opacity:.4; }
+  .glitching .blood{ animation: bloodPulse 0.4s steps(3,end) infinite; }
+  @keyframes bloodPulse{
+    0%{ opacity:.85; transform: scale(1); }
+    50%{ opacity:.55; transform: scale(1.03); }
+    100%{ opacity:.8; transform: scale(0.99); }
+  }
+  .glitching{ animation: overlayShake 0.15s steps(2,end) infinite; }
+  @keyframes overlayShake{
+    0%{ transform: translate(0,0); filter: brightness(1); }
+    25%{ transform: translate(-3px,2px); filter: brightness(1.15); }
+    50%{ transform: translate(3px,-2px); filter: brightness(.9); }
+    75%{ transform: translate(-2px,-3px); filter: brightness(1.1); }
+    100%{ transform: translate(2px,2px); filter: brightness(1); }
+  }
+  #glitch-text{
+    font-family: 'Aref Ruqaa', serif;
+    font-weight: 700;
+    font-size: 22vw;
+    color: #d8d2c4;
+    letter-spacing: 4px;
+    position: relative;
+    z-index: 2;
+  }
+  #glitch-text::before, #glitch-text::after{
+    content: "قاتل";
+    position: absolute; top:0; left:0; width:100%;
+  }
+  #glitch-text::before{ color: #b3121a; clip-path: inset(0 0 55% 0); transform: translate(-6px,-3px); }
+  #glitch-text::after{ color: #1ac6c6; clip-path: inset(55% 0 0 0); transform: translate(6px,3px); }
+  .glitching #glitch-text{ animation: glitchJitter 0.09s steps(2,end) infinite; }
+  .glitching #glitch-text::before{ animation: glitchSliceA 0.13s steps(2,end) infinite; }
+  .glitching #glitch-text::after{ animation: glitchSliceB 0.11s steps(2,end) infinite; }
+  @keyframes glitchJitter{
+    0%{ transform: translate(0,0) skewX(0deg); }
+    25%{ transform: translate(-4px,2px) skewX(2deg); }
+    50%{ transform: translate(3px,-3px) skewX(-3deg); }
+    75%{ transform: translate(-2px,-2px) skewX(1deg); }
+    100%{ transform: translate(2px,3px) skewX(0deg); }
+  }
+  @keyframes glitchSliceA{
+    0%{ clip-path: inset(0 0 60% 0); transform: translate(-8px,-2px); }
+    50%{ clip-path: inset(20% 0 30% 0); transform: translate(-3px,4px); }
+    100%{ clip-path: inset(0 0 70% 0); transform: translate(-10px,-4px); }
+  }
+  @keyframes glitchSliceB{
+    0%{ clip-path: inset(60% 0 0 0); transform: translate(8px,2px); }
+    50%{ clip-path: inset(30% 0 20% 0); transform: translate(3px,-4px); }
+    100%{ clip-path: inset(70% 0 0 0); transform: translate(10px,4px); }
+  }
+
+  :root{
+    --paper: #ece1c8;
+    --paper-light: #f7f1e1;
+    --paper-dark: #ddccA3;
+    --ink: #362a1e;
+    --ink-soft: #5c4a37;
+    --red: #8a2020;
+    --red-dark: #641414;
+    --gold: #a3854f;
+    --shadow: rgba(54, 42, 30, 0.28);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; min-height:100vh; background: var(--ink); font-family:'Markazi Text', serif; color: var(--ink); }
+  body{
+    background: radial-gradient(circle at 20% 10%, rgba(0,0,0,0.15), transparent 40%),
+                radial-gradient(circle at 80% 90%, rgba(0,0,0,0.2), transparent 45%), #2a2018;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding: 24px 12px 60px;
+  }
+  .stage{ width:100%; max-width:680px; position:relative; }
+  .screen{ display:none; }
+  .screen.active{ display:block; animation: rise .6s ease both; }
+  @keyframes rise{ from{ opacity:0; transform: translateY(18px); } to{ opacity:1; transform: translateY(0); } }
+  .card{
+    background: radial-gradient(circle at 15% 15%, rgba(255,255,255,0.5), transparent 25%),
+                radial-gradient(circle at 85% 90%, rgba(0,0,0,0.06), transparent 35%), var(--paper);
+    border:1px solid var(--paper-dark);
+    box-shadow: 0 18px 40px var(--shadow), inset 0 0 60px rgba(163,133,79,0.12);
+    border-radius: 4px; padding: 34px 30px 28px; position:relative;
+  }
+  .card::before{ content:""; position:absolute; inset:10px; border:1px solid rgba(163,133,79,0.45); pointer-events:none; }
+  h1,h2,h3{ font-family:'Aref Ruqaa', serif; margin:0 0 10px; color: var(--ink); letter-spacing: .5px; }
+  .eyebrow{
+    font-family:'Aref Ruqaa', serif; font-size: 14px; letter-spacing: 3px; color: var(--red);
+    border-bottom: 1px solid rgba(138,32,32,0.35); display:inline-block; padding-bottom: 4px; margin-bottom: 16px;
+  }
+  p{ line-height: 2; font-size: 20px; color: var(--ink-soft); margin: 0 0 16px; text-align:justify; }
+  p.dialogue{ padding-right: 14px; border-right: 3px solid rgba(138,32,32,0.3); color: var(--ink); }
+  .btnrow{ display:flex; gap:10px; justify-content:flex-end; margin-top: 22px; flex-wrap:wrap; }
+  button.action{
+    font-family:'Aref Ruqaa', serif; font-size: 19px; background: var(--red); color: var(--paper-light);
+    border: none; padding: 11px 26px; border-radius: 2px; cursor:pointer; letter-spacing: 1px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25); transition: transform .15s ease, box-shadow .15s ease;
+  }
+  button.action:hover{ transform: translateY(-2px); box-shadow: 0 9px 18px rgba(0,0,0,0.3); }
+  button.action:active{ transform: translateY(0); }
+  button.action:focus-visible{ outline: 3px solid var(--gold); outline-offset:2px; }
+  button.action.ghost{ background: transparent; color: var(--ink-soft); border: 1px solid var(--paper-dark); box-shadow:none; }
+  .stampline{ display:flex; align-items:center; justify-content:space-between; margin-top: 26px; padding-top: 14px; border-top: 1px dashed rgba(163,133,79,0.5); }
+  .chapter-tag{ font-family:'Aref Ruqaa', serif; font-size: 13px; color: var(--ink-soft); letter-spacing: 2px; }
+  #screen-welcome .card{ text-align:center; padding: 50px 26px 40px; }
+  .welcome-title{ font-size: 40px; margin-bottom: 6px; }
+  .welcome-sub{ font-family:'Markazi Text',serif; color: var(--ink-soft); font-size: 20px; margin-bottom: 28px; }
+  .seal{ width: 120px; height:120px; margin: 0 auto 26px; border: 3px double var(--red); border-radius: 50%;
+    display:flex; align-items:center; justify-content:center; font-family:'Aref Ruqaa', serif; font-size: 20px; color: var(--red); }
+  .progress{ display:flex; gap:8px; justify-content:center; margin-bottom: 18px; }
+  .progress span{ width:9px; height:9px; border-radius:50%; background: rgba(163,133,79,0.35); }
+  .progress span.done{ background: var(--red); }
+  .riddle-box{
+    background: var(--paper-light); border: 1px dashed var(--gold); padding: 20px 18px; margin: 10px 0 20px;
+    font-family: 'Aref Ruqaa', serif; font-size: 19px; line-height: 2.1; color: var(--red-dark); text-align:center;
+  }
+  .statement{ font-size: 19px; line-height: 1.9; color: var(--ink); margin: 0 0 10px; padding-right: 10px; }
+  .statement b{ color: var(--red); font-family:'Aref Ruqaa', serif; }
+  .ans-input{
+    width:100%; font-family:'Markazi Text', serif; font-size: 22px; padding: 12px 14px;
+    border: 1px solid var(--paper-dark); background: var(--paper-light); color: var(--ink); border-radius: 2px; direction: rtl;
+  }
+  .ans-input:focus{ outline: 2px solid var(--gold); }
+  .error-msg{ color: var(--red); font-size:17px; margin-top:8px; display:none; }
+  .error-msg.show{ display:block; }
+  .code-box{
+    background: var(--paper-light); border: 1px dashed var(--gold); padding: 18px 16px; font-family:'Aref Ruqaa', serif;
+    font-size: 20px; text-align:center; color: var(--red-dark); margin: 18px 0; line-height: 1.8;
+  }
+  .drive-link{ display:inline-block; margin-top: 6px; color: var(--red); text-decoration: underline; font-family:'Aref Ruqaa', serif; font-size: 19px; }
+  .seal-wrap{ text-align:center; margin: 14px 0 6px; }
+  .seal-wrap svg{ width: 100%; max-width: 320px; height:auto; }
+  .glyph-line{ stroke: #641414; stroke-width: 1.6; fill: none; }
+  .glyph-dot{ fill: #641414; }
+  .three-box{
+    background: var(--paper-light); border: 1px dashed var(--gold); padding: 16px 14px; margin: 10px 0 18px;
+    font-size: 17px; line-height: 1.9; color: var(--ink); text-align:center;
+  }
+  @media (max-width: 480px){ p{ font-size: 18px; } .welcome-title{ font-size: 32px; } .card{ padding: 26px 18px 22px; } }
+</style>
+</head>
+<body>
+<div id="glitch-overlay">
+  <div class="blood blood1"></div>
+  <div class="blood blood2"></div>
+  <div class="blood blood3"></div>
+  <div class="blood blood4"></div>
+  <div class="blood blood5"></div>
+  <div id="glitch-text">قاتل</div>
+</div>
+<div class="stage">
+
+  <!-- ============ WELCOME ============ -->
+  <section class="screen active" id="screen-welcome">
+    <div class="card">
+      <div class="seal">سالستيا</div>
+      <div class="eyebrow">الملف الرابع</div>
+      <h1 class="welcome-title">الختم</h1>
+      <p class="welcome-sub">بعض الأبواب، حين تُفتح، لا تُغلق مرة أخرى.</p>
+      <button class="action" onclick="goTo('screen-ch15')">تابعي القراءة</button>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 15 ============ -->
+  <section class="screen" id="screen-ch15">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span></span><span></span><span></span><span></span></div>
+      <div class="eyebrow">الفصل الخامس عشر</div>
+      <h2>الغياب</h2>
+      <p>لم يعد فريدريك يثق بذاكرته كما كان. بدأ يفتح عينيه في أماكن لا يذكر أنه ذهب إليها: مرة عند النهر، ووجه القمر ينعكس على الماء رغم أن الساعة كانت لا تزال بعد الظهر حين أغلق عينيه آخر مرة. ومرة أخرى، وجد نفسه واقفًا أمام باب بيت العجوز، يده مرفوعة كأنه يوشك أن يطرق، ولا يذكر كيف وصل، ولا كم من الوقت مضى وهو واقف هناك.</p>
+      <p>بدأ يكتب في مذكراته وقائع الأيام، لا لأنه يحب الكتابة، بل لأنه صار يخاف نفسه: خوفًا هادئًا، بلا صراخ، من نوعٍ لا يشبه الخوف من الآخرين.</p>
+      <p class="dialogue">"اليوم فقدت ثلاث ساعات، ولا أعرف أين ذهبت. لكن يدي كانت متسخة بشيء داكن حين استيقظت، ولم أستطع أن أسأل أحدًا عن مصدره."</p>
+      <p>رسوماته، التي كانت يومًا قلاعًا في السماء، صارت الآن أشكالًا لا يفهمها هو نفسه: دوائر متداخلة، خطوطًا تتقاطع بزوايا لا وجود لها في أي هندسةٍ يعرفها، ووجوهًا صغيرة، عشرات الوجوه، مرسومة بعناية غريبة في زوايا الصفحات، وكأن يدًا أخرى، ليست يده، كانت تكمل الرسم كلما غفا.</p>
+      <p>وفكّر، في واحدة من لحظات صفائه القليلة، أن أخطر ما في فقدان الوقت ليس الفراغ الذي يتركه، بل السؤال الذي يليه دائمًا، والذي لا إجابة شافية له: من كان أنا، في الساعات التي لم أكن فيها أنا؟</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-welcome')">السابق</button>
+        <span class="chapter-tag">١٥ / ١٩</span>
+        <button class="action" onclick="goTo('screen-ch16')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 16 ============ -->
+  <section class="screen" id="screen-ch16">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span></span><span></span><span></span></div>
+      <div class="eyebrow">الفصل السادس عشر</div>
+      <h2>الصوت من تحت</h2>
+      <p>لم يعد الصوت يزوره في النوم فقط. بدأ يسمعه في لحظات اليقظة الكاملة: أثناء الدرس، بين كلمات المعلّم الجديد الذي حلّ محل الهارب، كان يسمع همسًا يتردد تحت كل صوتٍ آخر، كمن يتكلم من مكانٍ أعمق من الغرفة نفسها، من شقٍّ صغير في نسيج العالم لم يلاحظه أحد غيره.</p>
+      <p>في إحدى الليالي، استيقظ على صوت خدشٍ خفيف يأتي من الحائط، كأن أصابع طويلة رفيعة تحكّه من الداخل. أشعل الشمعة بيدٍ مرتجفة، فلم يجد شيئًا، لكنه وجد على الحائط، حيث كان الصوت، رسمًا لم يكن موجودًا من قبل: دائرة محاطة برموزٍ لا يعرف أحدٌ في سالستيا شكلها، متشابكة كعروق شجرة ميتة، وفي مركزها، شكلٌ يشبه عينًا، لكنها عين بلا جفن، لا تستطيع أن تُغلق أبدًا.</p>
+      <p>لم يخبر أحدًا. لم يعرف كيف يشرح شيئًا لا يفهمه هو نفسه. لكنه بدأ، من تلك الليلة، ينام والشمعة مضاءة، ويتجنب النظر إلى ذلك الحائط مباشرة، وكأن العين المرسومة قد تلاحظ أنه ينظر إليها.</p>
+      <p>سأل نفسه، ذات ليلة، سؤالًا لم يجرؤ أن يكتبه في مذكرته: هل يُعقل أن يكون الخوف نفسه كائنًا حيًّا، ينتقل من جسدٍ إلى جسد، يبحث دائمًا عن مضيفٍ جديد أصغر سنًا، أقل حيلة، أكثر استعدادًا لاستضافته دون أن يعرف؟ وإن كان كذلك... فمنذ متى هو يسكنه؟</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch15')">السابق</button>
+        <span class="chapter-tag">١٦ / ١٩</span>
+        <button class="action" onclick="goTo('screen-ch17')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 17 ============ -->
+  <section class="screen" id="screen-ch17">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span></span><span></span></div>
+      <div class="eyebrow">الفصل السابع عشر</div>
+      <h2>الوجه في المرآة</h2>
+      <p>في ليلةٍ لا يذكر منها إلا شظايا متناثرة، رأى فريدريك — أو ظنّ أنه رأى — الرجل الأنيق يقف في غرفته، لا في حلمٍ هذه المرة، بل بينما كان لا يزال مستيقظًا، أو يظن أنه كذلك. لم يتحدث الرجل. وقف فقط، بابتسامته المعتادة، وأشار بإصبعه نحو المرآة المعلّقة على الحائط.</p>
+      <p>نظر فريدريك في المرآة، فرأى نفسه، لكن بعينين ليستا عينيه: أعمق سوادًا، وأكثر هدوءًا مما ينبغي لطفلٍ في الحادية عشرة أن يكون. ابتسم الانعكاس له، قبل أن يبتسم هو، وهذا وحده كان كافيًا ليصرخ، لكن الصراخ لم يخرج.</p>
+      <p>استيقظ في صباح اليوم التالي على الأرض، لا على سريره، ويداه ملطّختان بشيءٍ داكن جفّ عند أطراف أظافره. لم يكن هناك جرح في جسده. ذهب مسرعًا يبحث عن نيث، بدافعٍ لم يفهمه، فوجد بيته هادئًا بشكلٍ غير معتاد، وأم نيث تجلس على عتبة الباب، عيناها منتفختان من البكاء، ترفض أن تنظر إليه أو تجيب حين سألها أين نيث.</p>
+      <p class="dialogue">- أين نيث؟ أرجوكِ، أين هو؟</p>
+      <p>لم تُجب. نظرت إلى يديه فقط، للحظةٍ واحدة، قبل أن تُدخل نفسها وتُغلق الباب في وجهه بهدوءٍ أثقل من أي صراخ.</p>
+      <p>لم يعرف فريدريك، في تلك اللحظة، إن كان الخوف الذي يشعر به خوفًا على صديقه، أم خوفًا من نفسه.</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch16')">السابق</button>
+        <span class="chapter-tag">١٧ / ١٩</span>
+        <button class="action" onclick="goTo('screen-ch18')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 18 ============ -->
+  <section class="screen" id="screen-ch18">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span></span></div>
+      <div class="eyebrow">الفصل الثامن عشر</div>
+      <h2>الختم</h2>
+      <p>بحث عن نيث في كل مكانٍ يعرفه: عند النهر، عند الحقل الذي كانا يلعبان فيه، عند بيت العجوز حتى، رغم خوفه منه. لم يجده. عاد إلى غرفته منهكًا، مرعوبًا من احتمالٍ لم يجرؤ على تسميته حتى في رأسه، ليجد مذكرته مفتوحة على طاولته، في صفحةٍ لم يكتبها هو، أو لا يذكر أنه كتبها.</p>
+      <p>كانت الصفحة مليئة، من حافةٍ إلى حافة، برسمٍ واحد متكرر بجنون: ختمٌ دائري، مطابقٌ تمامًا لما رآه على الحائط تلك الليلة، لكن أكثر تفصيلًا هذه المرة، وكأن يدًا تعلّمت الرسم أفضل مع كل تكرار. حروفٌ — إن كانت حروفًا أصلًا — منتشرة حول الدائرة، لا تشبه أبجدية سالستيا ولا أي أبجديةٍ عرفها فريدريك في كتب المدرسة. حين حاول أن يقرأها بصوتٍ عالٍ، شعر بلسانه يتلوى بطريقةٍ غريبة، وتوقف عن المحاولة فورًا، بغريزةٍ أعمق من الخوف.</p>
+      <p>في أسفل الصفحة، بخطٍّ ليس خط فريدريك، لكنه يشبهه بشكلٍ مقلق، كانت هناك كلمتان فقط:</p>
+      <p class="dialogue">"تقريبًا. جاهز."</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch17')">السابق</button>
+        <span class="chapter-tag">١٨ / ١٩</span>
+        <button class="action" onclick="goTo('screen-ch19')">التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAPTER 19 ============ -->
+  <section class="screen" id="screen-ch19">
+    <div class="card">
+      <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span></div>
+      <div class="eyebrow">الفصل التاسع عشر</div>
+      <h2>لا نهاية</h2>
+      <p>لا أحد يعرف كيف انتهت تلك الليلة بالضبط. حتى من جمع هذه الأوراق من مذكرة طفلٍ لم يعد أحد يعرف مكانه، لا يملك يقينًا كاملًا بما حدث بعدها.</p>
+      <p>ما يُعرف فقط: أن نيث عاد، بعد ثلاثة أيام، إلى بيته، حيًّا، لكنه لم يتحدث بعدها عن تلك الليلة أبدًا، ولم يعد ينظر إلى فريدريك بالطريقة نفسها، وإن ظل بجانبه، بعنادٍ أعمى لم يفهمه أحد، حتى هو.</p>
+      <p>وأن فريدريك، من تلك الليلة، توقف عن حلم الرجل الأنيق تمامًا. لم يزره بعدها ولو مرة. وكأن شيئًا ما، في تلك الليلة الضائعة من الذاكرة، قد تمّ الاتفاق عليه بين طرفين لا يعرف عنهما فريدريك شيئًا، واتفاقٌ كهذا لا يُعقد إلا حين يُدفَع ثمنه كاملًا، مقدّمًا، من طرفٍ لا يعلم أنه دفع.</p>
+      <p>هنا تتوقف الأوراق التي وجدناها. الصفحة التالية في المذكرة كانت فارغة تمامًا، إلا من ختمٍ واحد، مرسومٍ بهدوء غريب في منتصفها بالضبط، وكأن من رسمه لم يكن يرتجف هذه المرة، بل كان، للمرة الأولى منذ زمنٍ طويل، هادئًا تمامًا.</p>
+      <div class="stampline">
+        <button class="action ghost" onclick="goTo('screen-ch18')">السابق</button>
+        <span class="chapter-tag">١٩ / ١٩</span>
+        <button class="action" onclick="goTo('screen-shadows')">إلى الملف التالي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PUZZLE: THREE SHADOWS ============ -->
+  <section class="screen" id="screen-shadows">
+    <div class="card">
+      <div class="eyebrow">قبل المتابعة</div>
+      <h2>تقاطع الظلال الثلاثة</h2>
+      <p style="font-size:18px;">تلات حاجات محفوظة عندك من الأجزاء اللي فاتت. كل واحدة فيها رقم مستخبّي جواها. اكتشفي الأرقام التلاتة، رتبيهم بترتيب ظهور الحاجات نفسها (من الأول للتالت)، واكتبيهم هنا مع بعض.</p>
+      <input type="text" id="shadows-input" class="ans-input" placeholder="اكتبي الأرقام هنا..." dir="rtl">
+      <div class="error-msg" id="shadows-error">مش الترتيب الصح... راجعي الحاجات التلاتة تاني.</div>
+      <div class="btnrow">
+        <button class="action ghost" onclick="goTo('screen-ch19')">السابق</button>
+        <button class="action" onclick="checkShadows()">تأكيد</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SEAL ARTIFACT (deferred, atmospheric) ============ -->
+  <section class="screen" id="screen-seal">
+    <div class="card" style="text-align:center;">
+      <div class="eyebrow">قبل ما تسيبي الملف</div>
+      <h2>الختم</h2>
+      <div class="seal-wrap">
+        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="160" cy="160" r="130" class="glyph-line"></circle>
+          <circle cx="160" cy="160" r="98" class="glyph-line"></circle>
+          <g class="glyph-line">
+            <path d="M160 30 L172 55 L148 55 Z"></path>
+            <path d="M290 160 L265 172 L265 148 Z"></path>
+            <path d="M160 290 L148 265 L172 265 Z"></path>
+            <path d="M30 160 L55 148 L55 172 Z"></path>
+            <path d="M255 65 L235 85 M235 65 L255 85"></path>
+            <path d="M255 255 L235 235 M235 255 L255 235"></path>
+            <path d="M65 255 L85 235 M65 235 L85 255"></path>
+            <path d="M65 65 L85 85 M65 85 L85 65"></path>
+          </g>
+          <g class="glyph-line">
+            <path d="M160 90 C 145 105, 145 120, 160 130 C 175 120, 175 105, 160 90 Z"></path>
+            <path d="M160 230 C 145 215, 145 200, 160 190 C 175 200, 175 215, 160 230 Z"></path>
+            <path d="M90 160 C 105 145, 120 145, 130 160 C 120 175, 105 175, 90 160 Z"></path>
+            <path d="M230 160 C 215 145, 200 145, 190 160 C 200 175, 215 175, 230 160 Z"></path>
+          </g>
+          <ellipse cx="160" cy="160" rx="34" ry="20" class="glyph-line"></ellipse>
+          <circle cx="160" cy="160" r="7" class="glyph-dot"></circle>
+        </svg>
+      </div>
+      <p style="font-size:17px;">مش هينفع تفهمي الختم ده دلوقتي. احتفظي بصورة منه، وسيبيه من غير تفسير. هيلاقي معناه لوحده، في وقتٍ لسه ما جاش.</p>
+      <div class="btnrow" style="justify-content:center;">
+        <button class="action" onclick="goTo('screen-result')">تابعي</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section class="screen" id="screen-result">
+    <div class="card" style="text-align:center;">
+      <div class="eyebrow">نتيجة التحقيق</div>
+      <h2>الملف اتفتح</h2>
+      <p style="font-size:18px;">الجزء اللي بعده هو الأخير.</p>
+      <div class="code-box" id="drive-box">
+        الجزء التالي من الملف هنا:<br>
+        <a id="drive-link" class="drive-link" href="#" target="_blank" rel="noopener">فتح الرابط</a>
+      </div>
+      <div class="btnrow" style="justify-content:center;">
+        <button class="action" onclick="sendWhatsapp()">إرسال إجاباتي على واتساب</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const DRIVE_LINK = "PUT_DRIVE_LINK_HERE"; // <-- استبدل ده بلينك الجزء الخامس (الأخير) لما يجهز
+const WHATSAPP_NUMBER = "201033707583";
+
+function normalizeAr(str){
+  return (str || "")
+    .replace(/[\u064B-\u0652\u0670\u0640]/g, "")
+    .replace(/[إأآا]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ئ/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ة/g, "ه")
+    .replace(/[^؀-ۿ0-9a-zA-Z]/g, "")
+    .toLowerCase();
+}
+
+function goTo(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function toWesternDigits(str){
+  const map = {"٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9"};
+  return (str || "").replace(/[٠-٩]/g, d => map[d]);
+}
+
+function checkShadows(){
+  const raw = document.getElementById("shadows-input").value;
+  const digitsOnly = toWesternDigits(raw).replace(/[^0-9]/g, "");
+  const errorEl = document.getElementById("shadows-error");
+  if(digitsOnly === "1363"){
+    errorEl.classList.remove("show");
+    document.getElementById("drive-link").href = DRIVE_LINK;
+    goTo("screen-seal");
+  } else {
+    errorEl.classList.add("show");
+  }
+}
+
+function sendWhatsapp(){
+  const shadowsAns = document.getElementById("shadows-input").value || "";
+  const text = encodeURIComponent(
+    "إجابات يارا - الختم\n\nتقاطع الظلال الثلاثة: " + shadowsAns
+  );
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, "_blank");
+}
+</script>
+</body>
+</html>
